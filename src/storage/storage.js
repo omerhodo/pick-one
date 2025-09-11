@@ -7,10 +7,7 @@ import { STORAGE_KEYS } from '../utils/constants';
 export const saveSelection = async (selection) => {
   try {
     const existingSelections = await getSelections();
-    const newSelections = [...existingSelections, {
-      ...selection,
-      timestamp: Date.now(),
-    }];
+    const newSelections = [...existingSelections, selection];
     await AsyncStorage.setItem(STORAGE_KEYS.USER_SELECTIONS, JSON.stringify(newSelections));
     return true;
   } catch (error) {
@@ -76,7 +73,6 @@ export const clearAllData = async () => {
     await AsyncStorage.multiRemove([
       STORAGE_KEYS.USER_SELECTIONS,
       STORAGE_KEYS.USER_STATS,
-      STORAGE_KEYS.SEEN_PHOTOS,
     ]);
     return true;
   } catch (error) {

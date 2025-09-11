@@ -147,38 +147,6 @@ class PhotoService {
     }
   }
 
-  // Kişi detaylarını getir
-  async fetchPersonDetails(personId) {
-    try {
-      // API key kontrolü
-      if (!config.TMDB_API_KEY || config.TMDB_API_KEY === 'demo_key') {
-        throw new Error('TMDB API key bulunamadı');
-      }
-
-      const response = await fetch(
-        `${config.TMDB_BASE_URL}/person/${personId}?api_key=${config.TMDB_API_KEY}&language=tr-TR`
-      );
-
-      if (!response.ok) {
-        throw new Error(`TMDB API error: ${response.status}`);
-      }
-
-      const data = await response.json();
-      return {
-        success: true,
-        data: data,
-      };
-    } catch (error) {
-      console.error('TMDB Person Details Error:', error);
-      this.apiError = true;
-      return {
-        success: false,
-        error: error.message,
-        data: null,
-      };
-    }
-  }
-
   // TMDB verisini uygulama formatına çevir
   transformTMDBPerson(person, details = null) {
     const profileImage = person.profile_path
@@ -351,44 +319,6 @@ class PhotoService {
       return {
         success: true,
         data: [shuffled[0], shuffled[1]],
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: error.message,
-        data: null,
-      };
-    }
-  }
-
-  // Belirli bir fotoğraf getir
-  async getPhoto(id) {
-    try {
-      // Önce cache'te ara
-      const cachedPhoto = this.celebrities.find(p => p.id === id);
-      if (cachedPhoto) {
-        return {
-          success: true,
-          data: cachedPhoto,
-        };
-      }
-
-      // TMDB'de ID ile ara
-      if (typeof id === 'number' || !id.includes('_')) {
-        const detailsResponse = await this.fetchPersonDetails(id);
-        if (detailsResponse.success) {
-          const transformedPerson = this.transformTMDBPerson(detailsResponse.data, detailsResponse.data);
-          return {
-            success: true,
-            data: transformedPerson,
-          };
-        }
-      }
-
-      return {
-        success: false,
-        error: 'Kişi bulunamadı',
-        data: null,
       };
     } catch (error) {
       return {
