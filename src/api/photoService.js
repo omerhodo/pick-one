@@ -366,33 +366,71 @@ class PhotoService {
 
   async getRandomPair(excludeIds = []) {
     try {
-      // Mevcut gender ve category parametreleri ile fotoğrafları al
-      const response = await this.getPhotos(this.currentCategory, this.currentGender);
-      const photos = response.data.filter(photo => !excludeIds.includes(photo.id));
+      console.log('🎯 getRandomPair çağrıldı, excludeIds:', excludeIds);
 
-      if (photos.length < 2) {
-        // Daha fazla veri yükle
-        this.currentPage++;
+      let response = await this.getPhotos(this.currentCategory, this.currentGender);
+
+      if (!response.success) {
+        throw new Error('Fotoğraf verisi alınamadı');
+      }
+
+      let photos = response.data.filter(photo => !excludeIds.includes(photo.id));
+      console.log(`📊 Toplam ${response.data.length} fotoğraf, ${excludeIds.length} filtrelendi, kalan: ${photos.length}`);
+
+      let attempts = 0;
+      while (photos.length < 2 && attempts < 3) {
+        console.log(`⚠️ Sadece ${photos.length} fotoğraf kaldı, daha fazla veri yükleniyor... (deneme ${attempts + 1})`);
+
         const moreResponse = await this.getPhotos(this.currentCategory, this.currentGender);
-        const morePhotos = moreResponse.data.filter(photo => !excludeIds.includes(photo.id));
-        photos.push(...morePhotos);
+        if (moreResponse.success && moreResponse.data.length > 0) {
+          const newPhotos = moreResponse.data.filter(photo => !excludeIds.includes(photo.id));
+
+          const existingIds = photos.map(p => p.id);
+          const uniqueNewPhotos = newPhotos.filter(photo => !existingIds.includes(photo.id));
+
+          photos.push(...uniqueNewPhotos);
+          console.log(`✅ ${uniqueNewPhotos.length} yeni unique fotoğraf eklendi, toplam: ${photos.length}`);
+        } else {
+          console.log('❌ Daha fazla veri alınamadı');
+          break;
+        }
+        attempts++;
       }
 
       if (photos.length < 2) {
+        console.error('❌ Yeterli unique fotoğraf bulunamadı:', photos.length);
         return {
           success: false,
-          error: 'Yeterli fotoğraf bulunamadı',
+          error: 'Yeterli unique fotoğraf bulunamadı',
           data: null,
         };
       }
 
-      const shuffled = [...photos].sort(() => 0.5 - Math.random());
+      const shuffled = this.shuffleArray([...photos]);
+      const selectedPair = [shuffled[0], shuffled[1]];
+
+      if (selectedPair[0].id === selectedPair[1].id) {
+        if (shuffled.length > 2) {
+          selectedPair[1] = shuffled[2];
+          console.log('⚠️ Aynı kişi tespit edildi, 3. kişi seçildi');
+        } else {
+          console.error('❌ Farklı kişiler seçilemedi');
+          return {
+            success: false,
+            error: 'Farklı kişiler seçilemedi',
+            data: null,
+          };
+        }
+      }
+
+      console.log('✅ Seçilen çift:', selectedPair.map(p => `${p.name} (ID: ${p.id})`));
 
       return {
         success: true,
-        data: [shuffled[0], shuffled[1]],
+        data: selectedPair,
       };
     } catch (error) {
+      console.error('❌ getRandomPair error:', error);
       return {
         success: false,
         error: error.message,
@@ -401,7 +439,6 @@ class PhotoService {
     }
   }
 
-  // Seçimi kaydet
   async submitSelection(selection) {
     try {
       console.log('Seçim kaydedildi:', selection);
@@ -418,7 +455,6 @@ class PhotoService {
     }
   }
 
-  // Cache temizle
   clearCache() {
     this.celebrities = [];
     this.currentPage = 1;
@@ -429,24 +465,19 @@ class PhotoService {
     this.currentCategory = null;
   }
 
-  // Sadece fotoğraf cache'ini temizle (gender parametrelerini koru)
   clearPhotoCache() {
     this.celebrities = [];
     this.currentPage = 1;
-    // Gender ve category parametrelerini koru
   }
 
-  // Gender parametresini resetle (HomeScreen'e dönüldüğünde kullanılır)
   resetGenderFilter() {
     console.log('🔄 Gender filter resetleniyor... (API isteği yok)');
     this.currentGender = null;
     this.currentCategory = null;
     this.celebrities = [];
     this.currentPage = 1;
-    // API isteği atmıyoruz, sadece cache temizliyoruz
   }
 
-  // Daha fazla veri yükle
   async loadMore() {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
@@ -459,6 +490,40 @@ class PhotoService {
       usingTestData: this.useTestData,
       apiError: this.apiError,
     };
+  }
+
+  async getFreshOpponent(currentWinner, excludeIds = []) {
+    try {
+      console.log(`🔄 Fresh opponent araniyor: ${currentWinner?.name} için`);
+
+      const response = await this.getPhotos(this.currentCategory, this.currentGender);
+
+      if (!response.success || !response.data) {
+        console.log('❌ Fresh data alınamadı');
+        return null;
+      }
+
+      const allExcludeIds = [...excludeIds, currentWinner?.id].filter(Boolean);
+      const availableOpponents = response.data.filter(
+        photo => !allExcludeIds.includes(photo.id)
+      );
+
+      console.log(`📊 Fresh data: ${response.data.length} total, ${availableOpponents.length} available opponents`);
+
+      if (availableOpponents.length === 0) {
+        console.log('❌ Fresh data\'da uygun rakip yok');
+        return null;
+      }
+
+      const randomOpponent = availableOpponents[Math.floor(Math.random() * availableOpponents.length)];
+      console.log(`✅ Fresh opponent bulundu: ${randomOpponent?.name} (ID: ${randomOpponent?.id})`);
+
+      return randomOpponent;
+
+    } catch (error) {
+      console.error('❌ getFreshOpponent error:', error);
+      return null;
+    }
   }
 }
 

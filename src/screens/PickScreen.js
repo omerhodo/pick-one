@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Animated, Dimensions, Platform, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import photoService from '../api/photoService';
 import BlurBackground from '../components/BlurBackground';
 import Button from '../components/Button';
 import Loader from '../components/Loader';
@@ -26,6 +27,7 @@ const PickScreen = ({ navigation, route }) => {
 
   const [animatedValue] = useState(new Animated.Value(1));
   const [isSelecting, setIsSelecting] = useState(false);
+  const [isLoadingOpponent, setIsLoadingOpponent] = useState(false);
   const [screenData, setScreenData] = useState(Dimensions.get('window'));
 
   useEffect(() => {
@@ -51,7 +53,8 @@ const PickScreen = ({ navigation, route }) => {
           setCurrentPair([currentWinner, newOpponent]);
         }
       } else {
-        const pair = getRandomPair(photos, [], selections);
+        // currentWinner yok, yeni pair oluştur
+        const pair = getRandomPair(photos, [], selections, null);
         if (pair) {
           setCurrentPair(pair);
         }
@@ -79,7 +82,10 @@ const PickScreen = ({ navigation, route }) => {
   };
 
   const handlePhotoSelection = (selectedPhoto) => {
-    if (isSelecting || !currentPair) return;
+    if (isSelecting || !currentPair || isLoadingOpponent) {
+      console.log('⏸️ Seçim engellendi - isSelecting:', isSelecting, 'isLoadingOpponent:', isLoadingOpponent);
+      return;
+    }
 
     const rejectedPhoto = currentPair.find(photo => photo.id !== selectedPhoto.id);
     const selectedPhotoIndex = currentPair.findIndex(photo => photo.id === selectedPhoto.id);
@@ -101,19 +107,57 @@ const PickScreen = ({ navigation, route }) => {
           { selectedId: selectedPhoto.id, rejectedId: rejectedPhoto.id }
         ]);
 
-        const newOpponent = getNewOpponent(selectedPhoto, photos, usedOpponentIds);
+        console.log('🔄 Fresh opponent deneniyor...');
+        setIsLoadingOpponent(true);
 
-        if (newOpponent) {
-          if (selectedPhotoIndex === 0) {
-            setCurrentPair([selectedPhoto, newOpponent]);
+        try {
+          const freshOpponent = await photoService.getFreshOpponent(selectedPhoto, usedOpponentIds);
+
+          if (freshOpponent) {
+            console.log(`✅ Fresh opponent kullaniliyor: ${freshOpponent.name}`);
+            if (selectedPhotoIndex === 0) {
+              setCurrentPair([selectedPhoto, freshOpponent]);
+            } else {
+              setCurrentPair([freshOpponent, selectedPhoto]);
+            }
           } else {
-            setCurrentPair([newOpponent, selectedPhoto]);
+            console.log('⚠️ Fresh opponent bulunamadı, mevcut verilerden deneniyor...');
+            const newOpponent = getNewOpponent(selectedPhoto, photos, usedOpponentIds);
+
+            if (newOpponent) {
+              console.log(`✅ Mevcut verilerden opponent bulundu: ${newOpponent.name}`);
+              if (selectedPhotoIndex === 0) {
+                setCurrentPair([selectedPhoto, newOpponent]);
+              } else {
+                setCurrentPair([newOpponent, selectedPhoto]);
+              }
+            } else {
+              console.log('⚠️ Yeni rakip bulunamadı, currentWinner korunarak yeni pair oluşturuluyor');
+              const pair = getRandomPair(photos, [], [...selections, { selectedId: selectedPhoto.id, rejectedId: rejectedPhoto.id }], selectedPhoto);
+              if (pair) {
+                setCurrentPair(pair);
+              } else {
+                console.log('⚠️ CurrentWinner korunamadı, tamamen yeni pair oluşturuluyor');
+                const newPair = getRandomPair(photos, [], [...selections, { selectedId: selectedPhoto.id, rejectedId: rejectedPhoto.id }]);
+                if (newPair) {
+                  setCurrentPair(newPair);
+                }
+              }
+            }
           }
-        } else {
-          const pair = getRandomPair(photos, [], [...selections, { selectedId: selectedPhoto.id, rejectedId: rejectedPhoto.id }]);
-          if (pair) {
-            setCurrentPair(pair);
+        } catch (error) {
+          console.error('❌ Fresh opponent hatası:', error);
+          const newOpponent = getNewOpponent(selectedPhoto, photos, usedOpponentIds);
+          if (newOpponent) {
+            console.log(`✅ Hata sonrası fallback opponent: ${newOpponent.name}`);
+            if (selectedPhotoIndex === 0) {
+              setCurrentPair([selectedPhoto, newOpponent]);
+            } else {
+              setCurrentPair([newOpponent, selectedPhoto]);
+            }
           }
+        } finally {
+          setIsLoadingOpponent(false);
         }
       }
     });
@@ -158,11 +202,13 @@ const PickScreen = ({ navigation, route }) => {
                 photo={currentPair[0]}
                 onPress={handlePhotoSelection}
                 style={[styles.landscapePhoto, styles.leftPhoto]}
+                isLoading={isLoadingOpponent && currentWinner && currentPair[0].id !== currentWinner.id}
               />
               <PhotoCard
                 photo={currentPair[1]}
                 onPress={handlePhotoSelection}
                 style={[styles.landscapePhoto, styles.rightPhoto]}
+                isLoading={isLoadingOpponent && currentWinner && currentPair[1].id !== currentWinner.id}
               />
             </Animated.View>
 
@@ -218,12 +264,14 @@ const PickScreen = ({ navigation, route }) => {
                 photo={currentPair[0]}
                 onPress={handlePhotoSelection}
                 style={[styles.portraitPhoto, styles.topPhoto]}
+                isLoading={isLoadingOpponent && currentWinner && currentPair[0].id !== currentWinner.id}
               />
 
               <PhotoCard
                 photo={currentPair[1]}
                 onPress={handlePhotoSelection}
                 style={[styles.portraitPhoto, styles.bottomPhoto]}
+                isLoading={isLoadingOpponent && currentWinner && currentPair[1].id !== currentWinner.id}
               />
             </Animated.View>
             <View style={styles.portraitVS}>

@@ -2,28 +2,43 @@
 
 /**
  * İki rastgele farklı fotoğraf seçer (geliştirilmiş algoritma)
+ * keepWinner: true ise, currentWinner korunur ve sadece yeni rakip seçilir
  */
-export const getRandomPair = (photos, excludeIds = [], selections = []) => {
+export const getRandomPair = (photos, excludeIds = [], selections = [], currentWinner = null) => {
+  console.log(`🎯 getRandomPair: ${photos.length} fotoğraf, excludeIds=${excludeIds.length}, currentWinner=${currentWinner?.name}`);
+
   const availablePhotos = photos.filter(photo => !excludeIds.includes(photo.id));
 
   if (availablePhotos.length < 2) {
+    console.log('❌ Yeterli fotoğraf yok:', availablePhotos.length);
     return null; // Yeterli fotoğraf yok
   }
 
-  // Seçim istatistiklerini hesapla
+  if (currentWinner) {
+    const availableOpponents = availablePhotos.filter(photo => photo.id !== currentWinner.id);
+
+    if (availableOpponents.length === 0) {
+      console.log('❌ CurrentWinner için rakip bulunamadı');
+      return null;
+    }
+
+    const randomOpponent = availableOpponents[Math.floor(Math.random() * availableOpponents.length)];
+    console.log(`✅ CurrentWinner korundu: ${currentWinner.name} vs ${randomOpponent.name}`);
+
+    return [currentWinner, randomOpponent];
+  }
+
   const selectionCounts = {};
   selections.forEach(selection => {
     selectionCounts[selection.selectedId] = (selectionCounts[selection.selectedId] || 0) + 1;
     selectionCounts[selection.rejectedId] = (selectionCounts[selection.rejectedId] || 0) + 0.5;
   });
 
-  // Daha az seçilen fotoğrafları önceliklendir
   const weightedPhotos = availablePhotos.map(photo => ({
     ...photo,
     weight: 1 / Math.max(1, selectionCounts[photo.id] || 0.1)
   }));
 
-  // Ağırlıklı rastgele seçim
   const selectWeightedRandom = (photos) => {
     const totalWeight = photos.reduce((sum, photo) => sum + photo.weight, 0);
     let random = Math.random() * totalWeight;
@@ -41,46 +56,46 @@ export const getRandomPair = (photos, excludeIds = [], selections = []) => {
   const remainingPhotos = weightedPhotos.filter(p => p.id !== firstPhoto.id);
   const secondPhoto = selectWeightedRandom(remainingPhotos);
 
+  console.log(`✅ İki yeni fotoğraf seçildi: ${firstPhoto.name} vs ${secondPhoto.name}`);
+
   return [firstPhoto, secondPhoto];
 };
 
-/**
- * Turnuva sistemi için yeni rakip seçer
- * Kazanan kalır, yeni rakip gelir
- */
 export const getNewOpponent = (winner, photos, usedOpponentIds = []) => {
+  console.log(`🎯 getNewOpponent: Winner=${winner?.name} (ID: ${winner?.id})`);
+  console.log(`📊 Kullanılan rakip ID'ler:`, usedOpponentIds);
+  console.log(`📊 Toplam ${photos.length} fotoğraf mevcut`);
+
   const availableOpponents = photos.filter(
     photo => photo.id !== winner.id && !usedOpponentIds.includes(photo.id)
   );
 
+  console.log(`✅ ${availableOpponents.length} uygun rakip bulundu`);
+
   if (availableOpponents.length === 0) {
+    console.log('❌ Tüm rakipler tükendi, yeni veri gerekli');
     return null; // Tüm rakipler tükendi
   }
 
   // Rastgele yeni rakip seç
   const randomIndex = Math.floor(Math.random() * availableOpponents.length);
-  return availableOpponents[randomIndex];
+  const selectedOpponent = availableOpponents[randomIndex];
+
+  console.log(`🎲 Yeni rakip seçildi: ${selectedOpponent?.name} (ID: ${selectedOpponent?.id})`);
+
+  return selectedOpponent;
 };
 
-/**
- * Turnuva geçmişinden kullanılmış rakipleri çıkarır
- */
 export const getUsedOpponents = (winnerId, selections) => {
   return selections
     .filter(selection => selection.selectedId === winnerId)
     .map(selection => selection.rejectedId);
 };
 
-/**
- * Rastgele sayı üretir
- */
 export const getRandomNumber = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-/**
- * Tarihi formatlar
- */
 export const formatDate = (date) => {
   return new Intl.DateTimeFormat('tr-TR', {
     year: 'numeric',
@@ -89,17 +104,11 @@ export const formatDate = (date) => {
   }).format(new Date(date));
 };
 
-/**
- * Yüzde hesaplar
- */
 export const calculatePercentage = (part, total) => {
   if (total === 0) return 0;
   return Math.round((part / total) * 100);
 };
 
-/**
- * Dizinin karışık halini döndürür
- */
 export const shuffleArray = (array) => {
   const shuffled = [...array];
   for (let i = shuffled.length - 1; i > 0; i--) {
@@ -109,9 +118,6 @@ export const shuffleArray = (array) => {
   return shuffled;
 };
 
-/**
- * İstatistik hesaplama
- */
 export const calculateStats = (selections) => {
   if (!selections || selections.length === 0) {
     return {
@@ -130,7 +136,6 @@ export const calculateStats = (selections) => {
     selectionCounts[a] > selectionCounts[b] ? a : b
   );
 
-  // Kazanma oranlarını hesapla
   const winRate = {};
   Object.keys(selectionCounts).forEach(photoId => {
     winRate[photoId] = calculatePercentage(selectionCounts[photoId], selections.length);

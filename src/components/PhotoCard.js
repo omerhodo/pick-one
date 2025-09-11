@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { COLORS, SIZES } from '../utils/constants';
 
-const PhotoCard = ({ photo, onPress, style, showName = true, showDetails = false }) => {
+const PhotoCard = ({ photo, onPress, style, showName = true, showDetails = false, isLoading = false }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -40,7 +40,7 @@ const PhotoCard = ({ photo, onPress, style, showName = true, showDetails = false
       onPress={handlePress}
       style={[styles.container, style]}
       activeOpacity={onPress ? 0.9 : 1}
-      disabled={!onPress}
+      disabled={!onPress || isLoading}
     >
       <View style={styles.card}>
         {loading && renderLoadingIndicator()}
@@ -55,6 +55,13 @@ const PhotoCard = ({ photo, onPress, style, showName = true, showDetails = false
           />
         ) : (
           !loading && renderPlaceholder()
+        )}
+
+        {isLoading && (
+          <View style={styles.externalLoadingOverlay}>
+            <ActivityIndicator size="large" color={COLORS.white} />
+            <Text style={styles.loadingText}>Yeni rakip aranıyor...</Text>
+          </View>
         )}
 
         {(showName || showDetails) && (
@@ -177,6 +184,24 @@ const styles = StyleSheet.create({
     opacity: 0.7,
     textAlign: 'center',
     marginTop: 2,
+  },
+  externalLoadingOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: SIZES.radius,
+    zIndex: 10,
+  },
+  loadingText: {
+    color: COLORS.white,
+    fontSize: SIZES.small,
+    marginTop: 8,
+    textAlign: 'center',
   },
 });
 
