@@ -124,28 +124,22 @@ class PhotoService {
     return shuffled;
   }
 
-  // TMDB API çağrısı - popüler kişiler
   async fetchPopularPeople(page = 1, gender = null) {
     try {
-      // API key kontrolü
       if (!config.TMDB_API_KEY || config.TMDB_API_KEY === 'demo_key') {
         throw new Error('TMDB API key bulunamadı');
       }
 
-      let url;
+      const randomPage = Math.floor(Math.random() * 500) + 1;
+      console.log(`🎲 Tamamen rastgele sayfa seçiliyor: ${randomPage} (gender: ${gender})`);
+
+      const url = `${config.TMDB_BASE_URL}/person/popular`;
+
       const params = new URLSearchParams({
         api_key: config.TMDB_API_KEY,
-        page: page.toString(),
+        page: randomPage.toString(),
         language: 'tr-TR'
       });
-
-      if (gender !== null) {
-        url = `${config.TMDB_BASE_URL}/discover/person`;
-        params.append('with_gender', gender.toString());
-        params.append('sort_by', 'popularity.desc');
-      } else {
-        url = `${config.TMDB_BASE_URL}/person/popular`;
-      }
 
       const response = await fetch(`${url}?${params}`);
 
@@ -159,12 +153,15 @@ class PhotoService {
       if (data.results) {
         data.results = data.results.filter(person => person.profile_path);
 
+        // Client-side gender filtering (1=Kadın, 2=Erkek)
         if (gender !== null) {
+          const beforeFilter = data.results.length;
           data.results = data.results.filter(person => person.gender === gender);
+          console.log(`🔍 Gender filtering: ${beforeFilter} -> ${data.results.length} (gender=${gender})`);
         }
 
+        // Sonuçları karıştır
         data.results = this.shuffleArray(data.results);
-
         data.total_results = data.results.length;
       }
 
