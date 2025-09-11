@@ -9,7 +9,9 @@ import { useGame } from '../context/GameContext';
 import { ANIMATION_DURATION, COLORS, SIZES } from '../utils/constants';
 import { getNewOpponent, getRandomPair, getUsedOpponents } from '../utils/helpers';
 
-const PickScreen = ({ navigation }) => {
+const PickScreen = ({ navigation, route }) => {
+  const { maxSelections = 10, gender } = route?.params || {};
+
   const {
     photos,
     currentPair,
@@ -38,7 +40,7 @@ const PickScreen = ({ navigation }) => {
   const isLandscape = screenData.width > screenData.height;
 
   useEffect(() => {
-    if (selections.length >= 10) return;
+    if (selections.length >= maxSelections) return;
 
     if (!currentPair && photos.length > 0) {
       if (currentWinner) {
@@ -82,7 +84,7 @@ const PickScreen = ({ navigation }) => {
     const rejectedPhoto = currentPair.find(photo => photo.id !== selectedPhoto.id);
     const selectedPhotoIndex = currentPair.findIndex(photo => photo.id === selectedPhoto.id);
 
-    const willBeLastSelection = selections.length + 1 >= 10;
+    const willBeLastSelection = selections.length + 1 >= maxSelections;
 
     animateSelection(async () => {
       const success = await makeSelection(selectedPhoto, rejectedPhoto);
@@ -178,7 +180,7 @@ const PickScreen = ({ navigation }) => {
                   {usingTestData && (
                     <Text style={styles.testDataIndicator}>Demo</Text>
                   )}
-                  <Text style={styles.landscapeCounter}>{selections.length}/10</Text>
+                  <Text style={styles.landscapeCounter}>{selections.length}/{maxSelections}</Text>
                 </View>
               </View>
 
@@ -202,7 +204,7 @@ const PickScreen = ({ navigation }) => {
                 {usingTestData && (
                   <Text style={styles.testDataIndicator}>Demo</Text>
                 )}
-                <Text style={styles.portraitCounter}>{selections.length}/10</Text>
+                <Text style={styles.portraitCounter}>{selections.length}/{maxSelections}</Text>
               </View>
             </View>
 

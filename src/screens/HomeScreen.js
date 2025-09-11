@@ -1,17 +1,81 @@
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ApiWarning from '../components/ApiWarning';
 import BlurBackground from '../components/BlurBackground';
 import Button from '../components/Button';
+import SelectorGroup from '../components/SelectorGroup';
 import { useGame } from '../context/GameContext';
 import { COLORS, SIZES } from '../utils/constants';
 
+const GENDER_OPTIONS = [
+  { value: null, label: 'Hepsi' },
+  { value: 2, label: 'Erkek' },
+  { value: 1, label: 'Kadın' },
+];
+
+const SELECTION_COUNT_OPTIONS = [
+  { value: 10, label: '10' },
+  { value: 15, label: '15' },
+  { value: 20, label: '20' },
+];
+
 const HomeScreen = ({ navigation }) => {
-  const { startGame, stats, selections, apiWarning, usingTestData, dismissApiWarning } = useGame();
+  const { startGame, stats, selections, apiWarning, usingTestData, dismissApiWarning, resetGenderFilter, clearCache } = useGame();
+  const isFirstMount = useRef(true);
+  const previousGender = useRef(null);
+  const isCacheClearingRef = useRef(false);
+
+  const [selectedGender, setSelectedGender] = useState(null);
+  const [selectedCount, setSelectedCount] = useState(10);
+
+  useEffect(() => {
+    isFirstMount.current = false;
+  }, []);
+
+  useEffect(() => {
+    if (!isFirstMount.current && !isCacheClearingRef.current && previousGender.current !== selectedGender) {
+      console.log(`🎯 Gender değişti: ${previousGender.current} → ${selectedGender}, cache temizleniyor...`);
+
+      isCacheClearingRef.current = true;
+      clearCache();
+      previousGender.current = selectedGender;
+
+      setTimeout(() => {
+        isCacheClearingRef.current = false;
+      }, 100);
+    }
+  }, [selectedGender]);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!isFirstMount.current && !isCacheClearingRef.current) {
+        console.log('🏠 HomeScreen\'e geri dönüldü, TÜM CACHE temizleniyor...');
+
+        isCacheClearingRef.current = true;
+        clearCache();
+        setSelectedGender(null);
+        previousGender.current = null;
+
+        setTimeout(() => {
+          isCacheClearingRef.current = false;
+        }, 100);
+      }
+    }, [])
+  );
 
   const handleStartGame = () => {
-    startGame();
-    navigation.navigate('PickScreen');
+    const gameSettings = {
+      gender: selectedGender,
+      maxSelections: selectedCount,
+    };
+
+    startGame(gameSettings);
+    navigation.navigate('PickScreen', {
+      maxSelections: selectedCount,
+      gender: selectedGender
+    });
   };
 
   return (
@@ -25,6 +89,22 @@ const HomeScreen = ({ navigation }) => {
                 <Text style={styles.testDataText}>Demo Modu</Text>
               </View>
             )}
+          </View>
+
+          <View style={styles.selectorsContainer}>
+            <SelectorGroup
+              title="Cinsiyet Seçimi"
+              options={GENDER_OPTIONS}
+              selectedValue={selectedGender}
+              onSelect={setSelectedGender}
+            />
+
+            <SelectorGroup
+              title="Kaç Seçim?"
+              options={SELECTION_COUNT_OPTIONS}
+              selectedValue={selectedCount}
+              onSelect={setSelectedCount}
+            />
           </View>
 
           <View style={styles.buttonContainer}>
@@ -59,9 +139,13 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    marginBottom: SIZES.margin * 3,
+    marginBottom: SIZES.margin * 2,
+  },
+  selectorsContainer: {
     flex: 1,
     justifyContent: 'center',
+    width: '100%',
+    paddingHorizontal: SIZES.padding,
   },
   title: {
     fontSize: SIZES.xl * 1.5,

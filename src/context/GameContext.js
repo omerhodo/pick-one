@@ -30,6 +30,7 @@ const ActionTypes = {
   SET_CURRENT_WINNER: 'SET_CURRENT_WINNER',
   APPEND_PHOTOS: 'APPEND_PHOTOS',
   SET_API_WARNING: 'SET_API_WARNING',
+  CLEAR_PHOTOS: 'CLEAR_PHOTOS',
 };
 
 const gameReducer = (state, action) => {
@@ -89,10 +90,19 @@ const gameReducer = (state, action) => {
         selections: [],
         currentPair: null,
         currentWinner: null,
+        photos: [],
       };
 
     case ActionTypes.SET_CURRENT_WINNER:
       return { ...state, currentWinner: action.payload };
+
+    case ActionTypes.CLEAR_PHOTOS:
+      return {
+        ...state,
+        photos: [],
+        currentPair: null,
+        currentWinner: null,
+      };
 
     case ActionTypes.RESET_GAME:
       return {
@@ -110,11 +120,11 @@ const GameContext = createContext();
 export const GameProvider = ({ children }) => {
   const [state, dispatch] = useReducer(gameReducer, initialState);
 
-  const loadPhotos = async (category = null) => {
+  const loadPhotos = async (category = null, gender = null) => {
     try {
       dispatch({ type: ActionTypes.SET_LOADING, payload: true });
 
-      const photosResponse = await photoService.getPhotos(category);
+      const photosResponse = await photoService.getPhotos(category, gender);
 
       if (photosResponse.success) {
         dispatch({
@@ -217,9 +227,15 @@ export const GameProvider = ({ children }) => {
     }
   };
 
-  const startGame = () => {
+  const startGame = (gameSettings = {}) => {
     dispatch({ type: ActionTypes.START_GAME });
     dispatch({ type: ActionTypes.SET_CURRENT_PAIR, payload: null });
+
+    // Oyunu yeni ayarlarla başlat
+    if (gameSettings.gender !== undefined || gameSettings.maxSelections !== undefined) {
+      photoService.clearCache();
+      loadPhotos(null, gameSettings.gender);
+    }
   };
 
   const resetGame = async () => {
@@ -247,7 +263,6 @@ export const GameProvider = ({ children }) => {
   useEffect(() => {
     const initializeApp = async () => {
       await loadData();
-      await loadPhotos();
     };
 
     initializeApp();
@@ -255,6 +270,28 @@ export const GameProvider = ({ children }) => {
 
   const dismissApiWarning = () => {
     dispatch({ type: ActionTypes.SET_API_WARNING, payload: false });
+  };
+
+  const clearCache = () => {
+    console.log('🧹 Photo cache + GameContext photos temizleniyor...');
+    try {
+      photoService.clearPhotoCache();
+      console.log('✅ PhotoService cache temizlendi');
+
+      if (dispatch) {
+        dispatch({ type: ActionTypes.CLEAR_PHOTOS });
+        console.log('✅ GameContext photos temizlendi');
+      } else {
+        console.warn('⚠️ dispatch fonksiyonu bulunamadı');
+      }
+    } catch (error) {
+      console.error('❌ Cache temizleme hatası:', error);
+    }
+  };
+
+  const resetGenderFilter = () => {
+    console.log('🔄 Gender filter resetleniyor... (API isteği yok)');
+    photoService.resetGenderFilter();
   };
 
   const value = {
@@ -279,6 +316,8 @@ export const GameProvider = ({ children }) => {
     loadPhotos,
     loadMorePhotos,
     dismissApiWarning,
+    clearCache,
+    resetGenderFilter,
   };
 
   return (

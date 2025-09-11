@@ -111,34 +111,79 @@ class PhotoService {
     this.totalPages = 1;
     this.apiError = false;
     this.useTestData = false;
+    this.currentGender = null;
+    this.currentCategory = null;
+  }
+
+  shuffleArray(array) {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
   }
 
   // TMDB API çağrısı - popüler kişiler
-  async fetchPopularPeople(page = 1) {
+  async fetchPopularPeople(page = 1, gender = null) {
     try {
       // API key kontrolü
       if (!config.TMDB_API_KEY || config.TMDB_API_KEY === 'demo_key') {
         throw new Error('TMDB API key bulunamadı');
       }
 
-      const response = await fetch(
-        `${config.TMDB_BASE_URL}/person/popular?api_key=${config.TMDB_API_KEY}&page=${page}&language=tr-TR`
-      );
+      let url;
+      const params = new URLSearchParams({
+        api_key: config.TMDB_API_KEY,
+        page: page.toString(),
+        language: 'tr-TR'
+      });
+
+      if (gender !== null) {
+        url = `${config.TMDB_BASE_URL}/discover/person`;
+        params.append('with_gender', gender.toString());
+        params.append('sort_by', 'popularity.desc');
+      } else {
+        url = `${config.TMDB_BASE_URL}/person/popular`;
+      }
+
+      const response = await fetch(`${url}?${params}`);
 
       if (!response.ok) {
         throw new Error(`TMDB API error: ${response.status}`);
       }
 
       const data = await response.json();
-      this.apiError = false; // API başarılı
+      this.apiError = false;
+
+      if (data.results) {
+        data.results = data.results.filter(person => person.profile_path);
+
+        if (gender !== null) {
+          data.results = data.results.filter(person => person.gender === gender);
+        }
+
+        data.results = this.shuffleArray(data.results);
+
+        data.total_results = data.results.length;
+      }
+
+      console.log(`TMDB API Response for gender=${gender}:`, {
+        current_page: data.page,
+        total_pages: data.total_pages,
+        total_results: data.total_results,
+        filtered_results: data.results?.length,
+        sample_people: data.results?.slice(0, 3).map(p => ({ name: p.name, gender: p.gender }))
+      });
+
       return {
         success: true,
         data: data,
       };
     } catch (error) {
       console.error('TMDB API Error:', error);
-      this.apiError = true; // API hatası var
-      this.useTestData = true; // Test verisine geç
+      this.apiError = true;
+      this.useTestData = true;
       return {
         success: false,
         error: error.message,
@@ -160,8 +205,8 @@ class PhotoService {
       category: this.getCategoryFromKnownFor(person.known_for || []),
       source: 'TMDB',
       popularity: person.popularity || 0,
-      gender: person.gender === 1 ? 'Kadın' : person.gender === 2 ? 'Erkek' : 'Belirtilmemiş',
-      knownFor: person.known_for_department || 'Bilinmeyen',
+      gender: person.gender === 1 ? 'Kadın' : person.gender === 2 ? 'Erkek' : 'Bilinmeyen',
+      knownFor: person.known_for_department || 'unknown',
       // Detaylar varsa ekle
       ...(details && {
         biography: details.biography || '',
@@ -187,14 +232,23 @@ class PhotoService {
   }
 
   // Test verilerini getir
-  getTestData(page = 1, category = null) {
+  getTestData(page = 1, category = null, gender = null) {
     const itemsPerPage = 4;
     const startIndex = (page - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
 
     let filteredData = TEST_CELEBRITIES;
+
+    // Gender filtresi (test verisinde gender string olarak tutulduğu için)
+    if (gender !== null) {
+      const genderString = gender === 1 ? 'Kadın' : gender === 2 ? 'Erkek' : null;
+      if (genderString) {
+        filteredData = filteredData.filter(person => person.gender === genderString);
+      }
+    }
+
     if (category && category !== 'Genel') {
-      filteredData = TEST_CELEBRITIES.filter(person => person.category === category);
+      filteredData = filteredData.filter(person => person.category === category);
     }
 
     const pageData = filteredData.slice(startIndex, endIndex);
@@ -209,30 +263,46 @@ class PhotoService {
         total_results: filteredData.length
       }
     };
-  }
-
-  // API durumunu kontrol et
+  }  // API durumunu kontrol et
   hasApiError() {
     return this.apiError;
   }
 
   // Ana fotoğraf getirme metodu
-  async getPhotos(category = null) {
+  async getPhotos(category = null, gender = null) {
     try {
+      console.log(`🎯 getPhotos called with: category=${category}, gender=${gender}`);
+
+      // Eğer gender değişmişse, cache'i temizle
+      if (this.currentGender !== gender || this.currentCategory !== category) {
+        if (this.celebrities.length > 0) { // Sadece cache varsa log bas
+          console.log(`🔄 Gender/Category changed from ${this.currentGender}/${this.currentCategory} to ${gender}/${category}, clearing cache`);
+        }
+        this.celebrities = [];
+        this.currentPage = 1;
+      }
+
+      // Parametreleri sakla
+      this.currentCategory = category;
+      this.currentGender = gender;
       let response;
 
       // Önce TMDB API'yi dene, hata varsa test verisine geç
       if (!this.useTestData) {
-        response = await this.fetchPopularPeople(this.currentPage);
+        // Tamamen rastgele sayfa seçimi (gerçek rastgelelik için)
+        const randomPage = Math.floor(Math.random() * 100) + 1;
+
+        console.log(`🎲 Tamamen rastgele sayfa seçiliyor: ${randomPage} (gender: ${gender})`);
+        response = await this.fetchPopularPeople(randomPage, gender);
 
         // API başarısızsa test verisini kullan
         if (!response.success) {
           console.log('TMDB API başarısız, test verisi kullanılıyor...');
-          response = this.getTestData(this.currentPage, category);
+          response = this.getTestData(this.currentPage, category, gender);
         }
       } else {
         // Zaten test verisi modundayız
-        response = this.getTestData(this.currentPage, category);
+        response = this.getTestData(this.currentPage, category, gender);
       }
 
       if (response.success && response.data.results) {
@@ -255,6 +325,10 @@ class PhotoService {
         if (category && category !== 'Genel' && response.data.results[0]?.source !== 'TEST') {
           filteredPeople = transformedPeople.filter(person => person.category === category);
         }
+
+        // Sonuçları karıştır (tam rastgelelik için)
+        filteredPeople = this.shuffleArray(filteredPeople);
+        console.log(`🎯 ${filteredPeople.length} sonuç karıştırıldı`);
 
         this.celebrities = [...this.celebrities, ...filteredPeople];
 
@@ -295,13 +369,14 @@ class PhotoService {
 
   async getRandomPair(excludeIds = []) {
     try {
-      const response = await this.getPhotos();
+      // Mevcut gender ve category parametreleri ile fotoğrafları al
+      const response = await this.getPhotos(this.currentCategory, this.currentGender);
       const photos = response.data.filter(photo => !excludeIds.includes(photo.id));
 
       if (photos.length < 2) {
         // Daha fazla veri yükle
         this.currentPage++;
-        const moreResponse = await this.getPhotos();
+        const moreResponse = await this.getPhotos(this.currentCategory, this.currentGender);
         const morePhotos = moreResponse.data.filter(photo => !excludeIds.includes(photo.id));
         photos.push(...morePhotos);
       }
@@ -353,13 +428,32 @@ class PhotoService {
     this.totalPages = 1;
     this.apiError = false;
     this.useTestData = false;
+    this.currentGender = null;
+    this.currentCategory = null;
+  }
+
+  // Sadece fotoğraf cache'ini temizle (gender parametrelerini koru)
+  clearPhotoCache() {
+    this.celebrities = [];
+    this.currentPage = 1;
+    // Gender ve category parametrelerini koru
+  }
+
+  // Gender parametresini resetle (HomeScreen'e dönüldüğünde kullanılır)
+  resetGenderFilter() {
+    console.log('🔄 Gender filter resetleniyor... (API isteği yok)');
+    this.currentGender = null;
+    this.currentCategory = null;
+    this.celebrities = [];
+    this.currentPage = 1;
+    // API isteği atmıyoruz, sadece cache temizliyoruz
   }
 
   // Daha fazla veri yükle
   async loadMore() {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
-      return await this.getPhotos();
+      return await this.getPhotos(this.currentCategory, this.currentGender);
     }
     return {
       success: false,
