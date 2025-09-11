@@ -1,24 +1,60 @@
 # Seç Birini 🎭
 
-İki fotoğraf arasından birini seçip, tercihlerini keşfettiğin eğlenceli mobil uygulama!
+İki ünlü arasından birini seçip, tercihlerini keşfettiğin eğlenceli mobil uygulama!
 
 ## 📱 Uygulama Hakkında
 
-"Seç Birini", kullanıcılara sürekli olarak iki fotoğraf arasından seçim yaptırarak tercihlerini analiz eden, eğlenceli ve bağımlılık yapan bir mobil uygulamadır. Tinder tarzı kaydırma yerine, dokunarak seçim yapma sistemi kullanır.
+"Seç Birini", kullanıcılara sürekli olarak iki ünlü fotoğrafı arasından seçim yaptırarak tercihlerini analiz eden, eğlenceli ve bağımlılık yapan bir mobil uygulamadır. TMDB (The Movie Database) API'sinden gerçek ünlü verileri çekerek otantik bir deneyim sunar.
 
 ### ✨ Özellikler
 
-- **Basit Seçim Sistemi**: İki fotoğraf arasından birini seçmen yeterli
-- **İstatistik Takibi**: Hangi fotoğrafları ne sıklıkta seçtiğini gör
-- **Favori Analizi**: En çok tercih ettiğin fotoğrafları keşfet
-- **Sonsuz İçerik**: Tüm kombinasyonları bitene kadar devam et
-- **Modern UI/UX**: Kullanıcı dostu, gradient tasarım
+- **TMDB Entegrasyonu**: Gerçek ünlü verileri ve yüksek kaliteli fotoğraflar
+- **Turnuva Sistemi**: 10 seçim ile kazanan belirleme
+- **Modern UI**: Blur arka plan ve gradient tasarım
+- **Yükleme Durumları**: Kullanıcı dostu loading animasyonları
+- **Fallback Sistem**: API hatalarında alternatif veri kaynakları
+- **İstatistik Takibi**: Hangi ünlüleri ne sıklıkta seçtiğini gör
 
 ### 🎯 Nasıl Çalışır?
 
-1. **Ana Ekran**: Oyuna başla veya sonuçlarını gör
-2. **Seçim Ekranı**: İki fotoğraf arasından birini seç
-3. **Sonuçlar Ekranı**: İstatistiklerini ve favorilerini incele
+1. **TMDB API**: Popüler ünlüleri ve fotoğraflarını çeker
+2. **Seçim Ekranı**: İki ünlü arasından birini seç
+3. **Turnuva**: Seçilen ünlü bir sonraki turda kalır
+4. **Kazanan**: 10 seçim sonunda şampiyon belirlenir
+
+## 🔑 Kurulum ve API Setup
+
+### Gereksinimler
+- Node.js (>= 14.0.0)
+- Expo CLI
+- TMDB API Key (ücretsiz)
+
+### 1. Projeyi Klonla
+```bash
+git clone <project-url>
+cd pick-one
+yarn install
+```
+
+### 2. Environment Dosyasını Ayarla
+```bash
+cp .env.example .env
+```
+
+### 3. TMDB API Key Al
+1. [TMDB](https://www.themoviedb.org/) hesabı oluştur
+2. **Settings > API** sayfasından API key al
+3. `.env` dosyasına ekle:
+```bash
+TMDB_API_KEY=your_actual_api_key_here
+```
+
+### 4. Uygulamayı Çalıştır
+```bash
+yarn start    # Expo development server
+yarn ios      # iOS simulator
+yarn android  # Android emulator
+```
 
 ## 🏗️ Teknik Yapı
 

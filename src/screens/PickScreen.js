@@ -18,7 +18,8 @@ const PickScreen = ({ navigation }) => {
     makeSelection,
     selections,
     loading,
-    currentWinner
+    currentWinner,
+    usingTestData
   } = useGame();
 
   const [animatedValue] = useState(new Animated.Value(1));
@@ -173,7 +174,12 @@ const PickScreen = ({ navigation }) => {
                   style={styles.landscapeBackButton}
                   textStyle={styles.backButtonText}
                 />
-                <Text style={styles.landscapeCounter}>{selections.length}/10</Text>
+                <View style={styles.headerCenter}>
+                  {usingTestData && (
+                    <Text style={styles.testDataIndicator}>Demo</Text>
+                  )}
+                  <Text style={styles.landscapeCounter}>{selections.length}/10</Text>
+                </View>
               </View>
 
               <View style={styles.landscapeVS}>
@@ -192,7 +198,12 @@ const PickScreen = ({ navigation }) => {
                 style={styles.portraitBackButton}
                 textStyle={styles.backButtonText}
               />
-              <Text style={styles.portraitCounter}>{selections.length}/10</Text>
+              <View style={styles.headerCenter}>
+                {usingTestData && (
+                  <Text style={styles.testDataIndicator}>Demo</Text>
+                )}
+                <Text style={styles.portraitCounter}>{selections.length}/10</Text>
+              </View>
             </View>
 
             <Animated.View
@@ -503,6 +514,19 @@ const styles = StyleSheet.create({
     textShadowColor: 'rgba(0,0,0,0.7)',
     textShadowOffset: { width: 2, height: 2 },
     textShadowRadius: 4,
+  },
+  headerCenter: {
+    alignItems: 'center',
+  },
+  testDataIndicator: {
+    color: '#FFA500',
+    fontSize: SIZES.small,
+    fontWeight: '600',
+    backgroundColor: 'rgba(255, 165, 0, 0.2)',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+    marginBottom: 2,
   },
 });
 

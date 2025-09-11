@@ -1,29 +1,35 @@
 import { createContext, useContext, useEffect, useReducer } from 'react';
+import photoService from '../api/photoService';
 import { getSelections, getStats, saveSelection, saveStats } from '../storage/storage';
-import { SAMPLE_CELEBRITIES } from '../utils/constants';
 import { calculateStats } from '../utils/helpers';
 
 const initialState = {
-  photos: SAMPLE_CELEBRITIES,
+  photos: [],
   currentPair: null,
   selections: [],
   stats: null,
-  loading: false,
+  loading: true,
   error: null,
   gameStarted: false,
   currentWinner: null,
+  pagination: null,
+  apiWarning: false,
+  usingTestData: false,
 };
 
 const ActionTypes = {
   SET_LOADING: 'SET_LOADING',
   SET_ERROR: 'SET_ERROR',
   LOAD_DATA_SUCCESS: 'LOAD_DATA_SUCCESS',
+  LOAD_PHOTOS_SUCCESS: 'LOAD_PHOTOS_SUCCESS',
   SET_CURRENT_PAIR: 'SET_CURRENT_PAIR',
   ADD_SELECTION: 'ADD_SELECTION',
   UPDATE_STATS: 'UPDATE_STATS',
   START_GAME: 'START_GAME',
   RESET_GAME: 'RESET_GAME',
   SET_CURRENT_WINNER: 'SET_CURRENT_WINNER',
+  APPEND_PHOTOS: 'APPEND_PHOTOS',
+  SET_API_WARNING: 'SET_API_WARNING',
 };
 
 const gameReducer = (state, action) => {
@@ -39,8 +45,30 @@ const gameReducer = (state, action) => {
         ...state,
         selections: action.payload.selections,
         stats: action.payload.stats,
-        loading: false,
       };
+
+    case ActionTypes.LOAD_PHOTOS_SUCCESS:
+      return {
+        ...state,
+        photos: action.payload.photos,
+        pagination: action.payload.pagination,
+        loading: false,
+        error: null,
+        apiWarning: action.payload.apiError || false,
+        usingTestData: action.payload.usingTestData || false,
+      };
+
+    case ActionTypes.APPEND_PHOTOS:
+      return {
+        ...state,
+        photos: [...state.photos, ...action.payload.photos],
+        pagination: action.payload.pagination,
+        apiWarning: action.payload.apiError || state.apiWarning,
+        usingTestData: action.payload.usingTestData || state.usingTestData,
+      };
+
+    case ActionTypes.SET_API_WARNING:
+      return { ...state, apiWarning: action.payload };
 
     case ActionTypes.SET_CURRENT_PAIR:
       return { ...state, currentPair: action.payload };
@@ -69,7 +97,7 @@ const gameReducer = (state, action) => {
     case ActionTypes.RESET_GAME:
       return {
         ...initialState,
-        photos: state.photos,
+        loading: true,
       };
 
     default:
@@ -82,10 +110,59 @@ const GameContext = createContext();
 export const GameProvider = ({ children }) => {
   const [state, dispatch] = useReducer(gameReducer, initialState);
 
-  const loadData = async () => {
+  const loadPhotos = async (category = null) => {
     try {
       dispatch({ type: ActionTypes.SET_LOADING, payload: true });
 
+      const photosResponse = await photoService.getPhotos(category);
+
+      if (photosResponse.success) {
+        dispatch({
+          type: ActionTypes.LOAD_PHOTOS_SUCCESS,
+          payload: {
+            photos: photosResponse.data,
+            pagination: photosResponse.pagination,
+            apiError: photosResponse.apiError,
+            usingTestData: photosResponse.usingTestData,
+          },
+        });
+      } else {
+        throw new Error(photosResponse.error || 'Fotoğraflar yüklenemedi');
+      }
+    } catch (error) {
+      console.error('Load photos error:', error);
+      dispatch({ type: ActionTypes.SET_ERROR, payload: error.message });
+    }
+  };
+
+  const loadMorePhotos = async () => {
+    try {
+      if (!state.pagination?.hasMore) return false;
+
+      const response = await photoService.loadMore();
+
+      if (response.success && response.data.length > 0) {
+        dispatch({
+          type: ActionTypes.APPEND_PHOTOS,
+          payload: {
+            photos: response.data,
+            pagination: response.pagination,
+            apiError: response.apiError,
+            usingTestData: response.usingTestData,
+          },
+        });
+        return true;
+      }
+
+      return false;
+    } catch (error) {
+      console.error('Load more photos error:', error);
+      return false;
+    }
+  };
+
+  const loadData = async () => {
+    try {
       const [selections, stats] = await Promise.all([
         getSelections(),
         getStats(),
@@ -99,6 +176,7 @@ export const GameProvider = ({ children }) => {
         },
       });
     } catch (error) {
+      console.error('Load data error:', error);
       dispatch({ type: ActionTypes.SET_ERROR, payload: error.message });
     }
   };
@@ -133,6 +211,7 @@ export const GameProvider = ({ children }) => {
 
       return true;
     } catch (error) {
+      console.error('Make selection error:', error);
       dispatch({ type: ActionTypes.SET_ERROR, payload: error.message });
       return false;
     }
@@ -149,19 +228,34 @@ export const GameProvider = ({ children }) => {
       const { clearAllData } = await import('../storage/storage');
       await clearAllData();
 
+      // Clear photo service cache
+      photoService.clearCache();
+
       dispatch({ type: ActionTypes.RESET_GAME });
 
-      dispatch({ type: ActionTypes.SET_LOADING, payload: false });
+      // Reload photos
+      await loadPhotos();
+
       return true;
     } catch (error) {
+      console.error('Reset game error:', error);
       dispatch({ type: ActionTypes.SET_ERROR, payload: error.message });
       return false;
     }
   };
 
   useEffect(() => {
-    loadData();
+    const initializeApp = async () => {
+      await loadData();
+      await loadPhotos();
+    };
+
+    initializeApp();
   }, []);
+
+  const dismissApiWarning = () => {
+    dispatch({ type: ActionTypes.SET_API_WARNING, payload: false });
+  };
 
   const value = {
     photos: state.photos,
@@ -172,6 +266,9 @@ export const GameProvider = ({ children }) => {
     error: state.error,
     gameStarted: state.gameStarted,
     currentWinner: state.currentWinner,
+    pagination: state.pagination,
+    apiWarning: state.apiWarning,
+    usingTestData: state.usingTestData,
 
     setCurrentPair,
     setCurrentWinner,
@@ -179,6 +276,9 @@ export const GameProvider = ({ children }) => {
     startGame,
     resetGame,
     loadData,
+    loadPhotos,
+    loadMorePhotos,
+    dismissApiWarning,
   };
 
   return (

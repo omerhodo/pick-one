@@ -1,4 +1,6 @@
-{
+import 'dotenv/config';
+
+export default {
   "expo": {
     "name": "Seç Birini",
     "slug": "pick-one",
@@ -26,6 +28,10 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "tmdbApiKey": process.env.TMDB_API_KEY,
+      "tmdbReadAccessToken": process.env.TMDB_READ_ACCESS_TOKEN
     }
   }
-}
+};

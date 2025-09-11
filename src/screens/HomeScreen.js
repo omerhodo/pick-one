@@ -1,12 +1,13 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import ApiWarning from '../components/ApiWarning';
 import BlurBackground from '../components/BlurBackground';
 import Button from '../components/Button';
 import { useGame } from '../context/GameContext';
 import { COLORS, SIZES } from '../utils/constants';
 
 const HomeScreen = ({ navigation }) => {
-  const { startGame, stats, selections } = useGame();
+  const { startGame, stats, selections, apiWarning, usingTestData, dismissApiWarning } = useGame();
 
   const handleStartGame = () => {
     startGame();
@@ -19,6 +20,11 @@ const HomeScreen = ({ navigation }) => {
         <View style={styles.content}>
           <View style={styles.header}>
             <Text style={styles.title}>Seç Birini</Text>
+            {usingTestData && (
+              <View style={styles.testDataBadge}>
+                <Text style={styles.testDataText}>Demo Modu</Text>
+              </View>
+            )}
           </View>
 
           <View style={styles.buttonContainer}>
@@ -30,6 +36,12 @@ const HomeScreen = ({ navigation }) => {
             />
           </View>
         </View>
+
+        <ApiWarning
+          visible={apiWarning}
+          usingTestData={usingTestData}
+          onDismiss={dismissApiWarning}
+        />
       </SafeAreaView>
     </BlurBackground>
   );
@@ -96,6 +108,18 @@ const styles = StyleSheet.create({
   },
   button: {
     marginBottom: SIZES.margin,
+  },
+  testDataBadge: {
+    backgroundColor: 'rgba(255, 165, 0, 0.9)',
+    paddingHorizontal: SIZES.padding,
+    paddingVertical: SIZES.margin / 2,
+    borderRadius: SIZES.radius / 2,
+    marginTop: SIZES.margin,
+  },
+  testDataText: {
+    color: COLORS.white,
+    fontSize: SIZES.small,
+    fontWeight: '600',
   },
 });
 
