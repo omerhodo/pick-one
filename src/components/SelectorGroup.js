@@ -66,6 +66,7 @@ SelectorGroup.displayName = 'SelectorGroup';
 const styles = StyleSheet.create({
   container: {
     marginBottom: SIZES.margin * 2,
+    width: '100%',
   },
   title: {
     color: COLORS.surface,
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     maxHeight: 60,
-    marginHorizontal: -SIZES.margin,
+    width: '100%',
   },
   horizontalContainer: {
     paddingLeft: SIZES.margin,

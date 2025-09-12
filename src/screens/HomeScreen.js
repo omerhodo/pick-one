@@ -1,6 +1,6 @@
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ApiWarning from '../components/ApiWarning';
 import BlurBackground from '../components/BlurBackground';
@@ -30,11 +30,25 @@ const HomeScreen = ({ navigation }) => {
 
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedCount, setSelectedCount] = useState(10);
+  const [screenData, setScreenData] = useState(Dimensions.get('window'));
 
+  // Get category options with current translation function
   const categoryOptions = getCategoryOptions(t);
+
+  // Check if screen is in landscape mode
+  const isLandscape = screenData.width > screenData.height;
 
   useEffect(() => {
     isFirstMount.current = false;
+  }, []);
+
+  useEffect(() => {
+    const onChange = (result) => {
+      setScreenData(result.window);
+    };
+
+    const subscription = Dimensions.addEventListener('change', onChange);
+    return () => subscription?.remove();
   }, []);
 
   useEffect(() => {
@@ -96,7 +110,7 @@ const HomeScreen = ({ navigation }) => {
     <BlurBackground>
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.content}>
-          <View style={styles.header}>
+          <View style={[styles.header, isLandscape && styles.headerLandscape]}>
             <Text style={styles.title}>{t('home.title')}</Text>
             {usingTestData && (
               <View style={styles.testDataBadge}>
@@ -105,7 +119,12 @@ const HomeScreen = ({ navigation }) => {
             )}
           </View>
 
-          <View style={styles.selectorsContainer}>
+          <ScrollView
+            style={styles.scrollContainer}
+            contentContainerStyle={styles.selectorsContainer}
+            showsVerticalScrollIndicator={false}
+            bounces={true}
+          >
             <LanguageSelector style={styles.languageSelector} />
 
             <SelectorGroup
@@ -123,7 +142,7 @@ const HomeScreen = ({ navigation }) => {
               selectedValue={selectedCount}
               onSelect={setSelectedCount}
             />
-          </View>
+          </ScrollView>
 
           <View style={styles.buttonContainer}>
             <Button
@@ -151,19 +170,27 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: SIZES.padding,
   },
   header: {
     alignItems: 'center',
-    marginBottom: SIZES.margin * 2,
+    paddingHorizontal: SIZES.padding,
+    paddingTop: SIZES.margin,
+    paddingBottom: SIZES.margin * 2,
+  },
+  headerLandscape: {
+    paddingBottom: SIZES.margin * 0.5, // Reduced margin for landscape mode
+  },
+  scrollContainer: {
+    flex: 1,
+    width: '100%',
   },
   selectorsContainer: {
-    flex: 1,
+    flexGrow: 1,
     justifyContent: 'center',
-    width: '100%',
-    paddingHorizontal: 0,
+    alignItems: 'center',
+    paddingHorizontal: SIZES.padding,
+    paddingVertical: SIZES.margin * 2,
+    minHeight: 300, // Minimum height to ensure content is accessible
   },
   title: {
     fontSize: SIZES.xl * 1.5,
@@ -205,8 +232,9 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     width: '100%',
-    paddingHorizontal: 0,
-    marginBottom: 50,
+    paddingHorizontal: SIZES.padding,
+    paddingBottom: SIZES.margin * 2,
+    paddingTop: SIZES.margin,
   },
   button: {
     marginBottom: SIZES.margin,
@@ -225,6 +253,7 @@ const styles = StyleSheet.create({
   },
   languageSelector: {
     marginBottom: SIZES.margin * 2,
+    width: '100%',
   },
 });
 

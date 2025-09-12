@@ -48,6 +48,7 @@ const LanguageSelector = ({ style }) => {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
+    width: '100%',
   },
   label: {
     color: COLORS.surface,
@@ -58,6 +59,8 @@ const styles = StyleSheet.create({
   languageButtons: {
     flexDirection: 'row',
     gap: SIZES.margin,
+    justifyContent: 'center',
+    flexWrap: 'wrap',
   },
   languageButton: {
     flexDirection: 'row',
