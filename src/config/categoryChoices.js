@@ -36,24 +36,17 @@ export const API_PROVIDERS = {
 // Compact Categories Configuration
 // Format: [key, name, shortName, icon, color, type, provider, endpoint, params]
 export const CATEGORIES = {
-  FEMALE: [1, 'Kadın Ünlüler', 'Kadın', '👩', '#FF6B9D', 'person', 'TMDB', '/discover/person', { with_gender: 1, sort_by: 'popularity.desc' }],
-  MALE: [2, 'Erkek Ünlüler', 'Erkek', '👨', '#4DABF7', 'person', 'TMDB', '/discover/person', { with_gender: 2, sort_by: 'popularity.desc' }],
-  ACTORS: ['actors', 'Aktörler', 'Aktör', '🎭', '#FFD43B', 'person', 'TMDB', '/discover/person', { with_profession: 'Acting', sort_by: 'popularity.desc' }],
-  MUSICIANS: ['musicians', 'Müzisyenler', 'Müzik', '🎵', '#9775FA', 'person', 'TMDB', '/discover/person', { with_profession: 'Sound', sort_by: 'popularity.desc' }],
-  WRITERS: ['writers', 'Yazarlar', 'Yazar', '✍️', '#51CF66', 'person', 'TMDB', '/discover/person', { with_profession: 'Writing', sort_by: 'popularity.desc' }],
+  FEMALE: [1, 'Aktiristler', 'Aktirist', '👩‍🎭', '#FF6B9D', 'person', 'TMDB', '/discover/person', { with_gender: 1, sort_by: 'popularity.desc' }],
+  MALE: [2, 'Aktörler', 'Aktör', '👨‍🎭', '#4DABF7', 'person', 'TMDB', '/discover/person', { with_gender: 2, sort_by: 'popularity.desc' }],
   MOVIES: ['movies', 'Filmler', 'Film', '🎬', '#FF8787', 'movie', 'TMDB', '/movie/popular', { sort_by: 'popularity.desc' }],
   CELEBRITIES_NINJAS: ['celebrities', 'Ünlü Kişiler', 'Ünlü', '🌟', '#FFA502', 'person', 'NINJAS', '/celebrity', { category: 'actor' }],
   DEFAULT: ['default', 'Tüm Ünlüler', 'Tümü', '⭐', '#FFA502', 'person', 'TMDB', '/person/popular', {}]
 };
 
-// Helper function to convert category key to translation key
 const getCategoryTranslationKey = (categoryKey) => {
   const keyMap = {
     1: 'female',
     2: 'male',
-    'actors': 'actors',
-    'musicians': 'musicians',
-    'writers': 'writers',
     'movies': 'movies',
     'celebrities': 'celebrities',
     'default': 'all'
@@ -61,7 +54,6 @@ const getCategoryTranslationKey = (categoryKey) => {
   return keyMap[categoryKey] || 'all';
 };
 
-// Helper function to convert compact format to full object
 const expandCategory = (compactData) => {
   const [key, name, shortName, icon, color, type, provider, endpoint, params] = compactData;
   return {
@@ -71,40 +63,28 @@ const expandCategory = (compactData) => {
   };
 };
 
-// Ana sayfa için kategori listesi
 export const HOMEPAGE_CATEGORIES = [
-  'FEMALE', 'MALE', 'ACTORS', 'MUSICIANS', 'WRITERS', 'MOVIES'
+  'FEMALE', 'MALE', 'MOVIES'
 ].map(key => expandCategory(CATEGORIES[key]));
 
-// Enhanced API Utilities
 export class CategoryAPI {
-  /**
-   * Kategori konfigürasyonunu getirir
-   */
   static getConfig(categoryKey) {
     const normalizedKey = this.normalizeKey(categoryKey);
     const compactData = CATEGORIES[normalizedKey] || CATEGORIES.DEFAULT;
     return expandCategory(compactData);
   }
 
-  /**
-   * Tam API URL'i oluşturur
-   */
   static getFullURL(categoryKey) {
     const category = this.getConfig(categoryKey);
     const provider = API_PROVIDERS[category.provider];
     return `${provider.baseURL}${category.api.endpoint}`;
   }
 
-  /**
-   * API parametrelerini getirir (auth dahil)
-   */
   static getParams(categoryKey) {
     const category = this.getConfig(categoryKey);
     const provider = API_PROVIDERS[category.provider];
     let params = { ...category.api.params };
 
-    // API key'i query parametresi olarak ekle
     if (provider.auth === 'query' && provider.apiKey) {
       params[provider.keyParam || 'api_key'] = provider.apiKey;
     }
@@ -112,34 +92,22 @@ export class CategoryAPI {
     return params;
   }
 
-  /**
-   * HTTP headers'ı getirir
-   */
   static getHeaders(categoryKey) {
     const category = this.getConfig(categoryKey);
     const provider = API_PROVIDERS[category.provider];
     return { ...provider.headers };
   }
 
-  /**
-   * API sağlayıcısını getirir
-   */
   static getProvider(categoryKey) {
     const category = this.getConfig(categoryKey);
     return API_PROVIDERS[category.provider];
   }
 
-  /**
-   * Kategoriye ait image base URL'i getirir
-   */
   static getImageBaseURL(categoryKey) {
     const provider = this.getProvider(categoryKey);
     return provider.imageBaseURL || '';
   }
 
-  /**
-   * Kategori anahtarını normalize eder
-   */
   static normalizeKey(key) {
     const keyMap = {
       1: 'FEMALE', 2: 'MALE', 'actors': 'ACTORS', 'musicians': 'MUSICIANS',
@@ -149,34 +117,24 @@ export class CategoryAPI {
     return keyMap[key] || 'DEFAULT';
   }
 
-  /**
-   * Belirli API sağlayıcısının kategorilerini getirir
-   */
   static getByProvider(providerName) {
     return Object.keys(CATEGORIES)
       .map(key => expandCategory(CATEGORIES[key]))
       .filter(cat => cat.provider === providerName);
   }
 
-  /**
-   * Belirli tipte kategorileri getirir
-   */
   static getByType(type) {
     return Object.keys(CATEGORIES)
       .map(key => expandCategory(CATEGORIES[key]))
       .filter(cat => cat.type === type);
   }
 
-  /**
-   * Fetch request konfigürasyonu oluşturur
-   */
   static getFetchConfig(categoryKey) {
     const headers = this.getHeaders(categoryKey);
     const provider = this.getProvider(categoryKey);
 
     let config = { headers };
 
-    // Bearer token auth
     if (provider.auth === 'bearer' && provider.apiKey) {
       config.headers.Authorization = `Bearer ${provider.apiKey}`;
     }
@@ -184,33 +142,22 @@ export class CategoryAPI {
     return config;
   }
 
-  /**
-   * Kategori rengini getirir
-   */
   static getColor(categoryKey) {
     const category = this.getConfig(categoryKey);
     return category.color;
   }
 
-  /**
-   * Kategori emoji'sini getirir
-   */
   static getEmoji(categoryKey) {
     const category = this.getConfig(categoryKey);
     return category.emoji;
   }
 
-  /**
-   * Tüm kategori isimlerini getirir
-   */
   static getAllNames() {
     return Object.keys(CATEGORIES).map(key => expandCategory(CATEGORIES[key]).name);
   }
 }
 
-// UI Components için compact exports
 export const UI = {
-  // Ana sayfa için seçenekler
   getHomepageOptions: (t) => [
     {
       value: null,
@@ -229,20 +176,17 @@ export const UI = {
     }))
   ],
 
-  // Basit isim listesi
   getSimpleList: () => Object.keys(CATEGORIES).map(key => {
     const cat = expandCategory(CATEGORIES[key]);
     return { key: cat.key, name: cat.name, icon: cat.icon };
   }),
 
-  // Renk haritası
   getColorMap: () => Object.keys(CATEGORIES).reduce((acc, key) => {
     const cat = expandCategory(CATEGORIES[key]);
     acc[cat.key] = cat.color;
     return acc;
   }, {}),
 
-  // API sağlayıcıları listesi
   getProviderList: () => Object.keys(API_PROVIDERS).map(key => ({
     key,
     name: API_PROVIDERS[key].name,
@@ -250,6 +194,5 @@ export const UI = {
   }))
 };
 
-// Export shortcuts
 export default CATEGORIES;
 export { CategoryAPI as API };
