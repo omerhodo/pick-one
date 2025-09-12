@@ -120,11 +120,13 @@ const GameContext = createContext();
 export const GameProvider = ({ children }) => {
   const [state, dispatch] = useReducer(gameReducer, initialState);
 
-  const loadPhotos = async (category = null, gender = null) => {
+  const loadPhotos = async (category = null) => {
     try {
+      console.log(`🎯 GameContext.loadPhotos çağrıldı: category=${category}`);
       dispatch({ type: ActionTypes.SET_LOADING, payload: true });
 
-      const photosResponse = await photoService.getPhotos(category, gender);
+      const photosResponse = await photoService.getPhotos(category);
+      console.log(`📦 PhotoService'den gelen response:`, photosResponse);
 
       if (photosResponse.success) {
         dispatch({
@@ -228,13 +230,15 @@ export const GameProvider = ({ children }) => {
   };
 
   const startGame = (gameSettings = {}) => {
+    console.log(`🎮 startGame çağrıldı, gameSettings:`, gameSettings);
     dispatch({ type: ActionTypes.START_GAME });
     dispatch({ type: ActionTypes.SET_CURRENT_PAIR, payload: null });
 
     // Oyunu yeni ayarlarla başlat
-    if (gameSettings.gender !== undefined || gameSettings.maxSelections !== undefined) {
+    if (gameSettings.category !== undefined || gameSettings.maxSelections !== undefined) {
+      console.log(`📤 PhotoService cache temizleniyor ve loadPhotos çağrılıyor: category=${gameSettings.category}`);
       photoService.clearCache();
-      loadPhotos(null, gameSettings.gender);
+      loadPhotos(gameSettings.category);
     }
   };
 
@@ -289,9 +293,9 @@ export const GameProvider = ({ children }) => {
     }
   };
 
-  const resetGenderFilter = () => {
-    console.log('🔄 Gender filter resetleniyor... (API isteği yok)');
-    photoService.resetGenderFilter();
+  const resetCategoryFilter = () => {
+    console.log('🔄 Category filter resetleniyor... (API isteği yok)');
+    photoService.resetCategoryFilter();
   };
 
   const value = {
@@ -317,7 +321,7 @@ export const GameProvider = ({ children }) => {
     loadMorePhotos,
     dismissApiWarning,
     clearCache,
-    resetGenderFilter,
+    resetCategoryFilter,
   };
 
   return (

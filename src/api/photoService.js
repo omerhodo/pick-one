@@ -1,3 +1,4 @@
+import { CategoryAPI } from '../config/categoryChoices';
 import config from '../config/env';
 
 // Test verileri
@@ -6,7 +7,7 @@ const TEST_CELEBRITIES = [
     id: 1,
     name: "Leonardo DiCaprio",
     image: "https://image.tmdb.org/t/p/w500/wo2hJpn04vbtmh0B9utCFdsQhxM.jpg",
-    category: "Sinema",
+    category: "actors",
     source: "TEST",
     popularity: 95.5,
     gender: "Erkek",
@@ -16,7 +17,7 @@ const TEST_CELEBRITIES = [
     id: 2,
     name: "Scarlett Johansson",
     image: "https://image.tmdb.org/t/p/w500/3JTEc2tGUact9c0WktvpeJ9pajn.jpg",
-    category: "Sinema",
+    category: "actors",
     source: "TEST",
     popularity: 89.2,
     gender: "Kadın",
@@ -26,7 +27,7 @@ const TEST_CELEBRITIES = [
     id: 3,
     name: "Robert Downey Jr.",
     image: "https://image.tmdb.org/t/p/w500/5qHNjhtjMD4YWH3UP0rm4tKwxCL.jpg",
-    category: "Sinema",
+    category: "actors",
     source: "TEST",
     popularity: 92.1,
     gender: "Erkek",
@@ -36,7 +37,7 @@ const TEST_CELEBRITIES = [
     id: 4,
     name: "Emma Stone",
     image: "https://image.tmdb.org/t/p/w500/wqEypkRUUZEcFmPV4O4JpZznmBk.jpg",
-    category: "Sinema",
+    category: "actors",
     source: "TEST",
     popularity: 85.7,
     gender: "Kadın",
@@ -46,7 +47,7 @@ const TEST_CELEBRITIES = [
     id: 5,
     name: "Tom Hanks",
     image: "https://image.tmdb.org/t/p/w500/a14CNByTYALAPSuci4drfhobpBu.jpg",
-    category: "Sinema",
+    category: "actors",
     source: "TEST",
     popularity: 88.9,
     gender: "Erkek",
@@ -56,7 +57,7 @@ const TEST_CELEBRITIES = [
     id: 6,
     name: "Jennifer Lawrence",
     image: "https://image.tmdb.org/t/p/w500/k6l8BWX1yqfGt95enzEkHoPvON4.jpg",
-    category: "Sinema",
+    category: "actors",
     source: "TEST",
     popularity: 87.3,
     gender: "Kadın",
@@ -66,7 +67,7 @@ const TEST_CELEBRITIES = [
     id: 7,
     name: "Chris Evans",
     image: "https://image.tmdb.org/t/p/w500/3bOGNsHlrswhyW79uvIHH1V43JI.jpg",
-    category: "Sinema",
+    category: "actors",
     source: "TEST",
     popularity: 84.6,
     gender: "Erkek",
@@ -76,7 +77,7 @@ const TEST_CELEBRITIES = [
     id: 8,
     name: "Margot Robbie",
     image: "https://image.tmdb.org/t/p/w500/euDPyqLnuwaWMHajcU3oZ9uZezR.jpg",
-    category: "Sinema",
+    category: "actors",
     source: "TEST",
     popularity: 91.4,
     gender: "Kadın",
@@ -86,7 +87,7 @@ const TEST_CELEBRITIES = [
     id: 9,
     name: "Ryan Reynolds",
     image: "https://image.tmdb.org/t/p/w500/2Orm6l3z3zukF1q0AgIOUqvwLeB.jpg",
-    category: "Sinema",
+    category: "actors",
     source: "TEST",
     popularity: 86.8,
     gender: "Erkek",
@@ -96,11 +97,84 @@ const TEST_CELEBRITIES = [
     id: 10,
     name: "Gal Gadot",
     image: "https://image.tmdb.org/t/p/w500/FejCCfVec4ej8pjUGGYtYhgDEF.jpg",
-    category: "Sinema",
+    category: "actors",
     source: "TEST",
     popularity: 83.2,
     gender: "Kadın",
     knownFor: "Acting"
+  },
+  // Test movie data
+  {
+    id: 11,
+    name: "The Avengers",
+    image: "https://image.tmdb.org/t/p/w500/RYMX2wcKCBAr24UyPD7xwmjaTn.jpg",
+    category: "movies",
+    source: "TEST",
+    popularity: 95.5,
+    releaseDate: "2012-04-25",
+    overview: "Earth's mightiest heroes must come together and learn to fight as a team if they are going to stop the trickster Loki and his alien army from enslaving humanity.",
+    voteAverage: 7.7,
+    voteCount: 28000
+  },
+  {
+    id: 12,
+    name: "Inception",
+    image: "https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg",
+    category: "movies",
+    source: "TEST",
+    popularity: 89.2,
+    releaseDate: "2010-07-16",
+    overview: "Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible.",
+    voteAverage: 8.4,
+    voteCount: 35000
+  },
+  {
+    id: 13,
+    name: "Interstellar",
+    image: "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
+    category: "movies",
+    source: "TEST",
+    popularity: 87.3,
+    releaseDate: "2014-11-05",
+    overview: "The adventures of a group of explorers who make use of a newly discovered wormhole to surpass the limitations on human space travel and conquer the vast distances involved in an interstellar voyage.",
+    voteAverage: 8.6,
+    voteCount: 32000
+  },
+  {
+    id: 14,
+    name: "The Dark Knight",
+    image: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
+    category: "movies",
+    source: "TEST",
+    popularity: 92.1,
+    releaseDate: "2008-07-18",
+    overview: "Batman raises the stakes in his war on crime. With the help of Lt. Jim Gordon and District Attorney Harvey Dent, Batman sets out to dismantle the remaining criminal organizations that plague the streets.",
+    voteAverage: 9.0,
+    voteCount: 31000
+  },
+  {
+    id: 15,
+    name: "Pulp Fiction",
+    image: "https://image.tmdb.org/t/p/w500/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg",
+    category: "movies",
+    source: "TEST",
+    popularity: 88.9,
+    releaseDate: "1994-10-14",
+    overview: "A burger-loving hit man, his philosophical partner, a drug-addicted gangster's moll and a washed-up boxer converge in this sprawling, comedic crime caper.",
+    voteAverage: 8.9,
+    voteCount: 27000
+  },
+  {
+    id: 16,
+    name: "Avatar",
+    image: "https://image.tmdb.org/t/p/w500/6EiRUJpuoeQPghrs3YNktfnqOVh.jpg",
+    category: "movies",
+    source: "TEST",
+    popularity: 91.4,
+    releaseDate: "2009-12-18",
+    overview: "In the 22nd century, a paraplegic Marine is dispatched to the moon Pandora on a unique mission, but becomes torn between following orders and protecting an alien civilization.",
+    voteAverage: 7.6,
+    voteCount: 29000
   }
 ];
 
@@ -111,7 +185,6 @@ class PhotoService {
     this.totalPages = 1;
     this.apiError = false;
     this.useTestData = false;
-    this.currentGender = null;
     this.currentCategory = null;
   }
 
@@ -124,40 +197,73 @@ class PhotoService {
     return shuffled;
   }
 
-  async fetchPopularPeople(page = 1, gender = null) {
+  async fetchPopularPeople(page = 1, category = null) {
     try {
-      if (!config.TMDB_API_KEY || config.TMDB_API_KEY === 'demo_key') {
-        throw new Error('TMDB API key bulunamadı');
+      const randomPage = Math.floor(Math.random() * 500) + 1;
+
+      // CategoryAPI'den kategori ve sağlayıcı bilgilerini al
+      const categoryConfig = CategoryAPI.getConfig(category);
+      const provider = CategoryAPI.getProvider(category);
+      const url = CategoryAPI.getFullURL(category);
+      const params = CategoryAPI.getParams(category);
+      const headers = CategoryAPI.getHeaders(category);
+      const fetchConfig = CategoryAPI.getFetchConfig(category);
+
+      // API key kontrolü (sadece gerekli olan sağlayıcılar için)
+      if ((provider.name === 'The Movie Database' && (!config.TMDB_API_KEY || config.TMDB_API_KEY === 'demo_key')) ||
+          (provider.name === 'API Ninjas' && (!config.API_NINJAS_KEY || config.API_NINJAS_KEY === 'demo_key'))) {
+        throw new Error(`${provider.name} API key bulunamadı`);
       }
 
-      const randomPage = Math.floor(Math.random() * 500) + 1;
-      console.log(`🎲 Tamamen rastgele sayfa seçiliyor: ${randomPage} (gender: ${gender})`);
+      console.log(`🌐 ${provider.name} API çağrısı yapılıyor:`);
+      console.log(`   Category: ${categoryConfig.displayName} (${categoryConfig.key})`);
+      console.log(`   Provider: ${provider.name}`);
+      console.log(`   URL: ${url}`);
+      console.log(`   Params:`, params);
+      console.log(`   Headers:`, headers);
 
-      const url = `${config.TMDB_BASE_URL}/person/popular`;
-
-      const params = new URLSearchParams({
-        api_key: config.TMDB_API_KEY,
+      // URL parametrelerini oluştur
+      const urlParams = new URLSearchParams({
         page: randomPage.toString(),
-        language: 'tr-TR'
+        language: 'tr-TR', // TMDB için
+        ...params
       });
 
-      const response = await fetch(`${url}?${params}`);
+      const fullUrl = `${url}?${urlParams}`;
+      console.log(`   Full URL: ${fullUrl}`);
+
+      // Fetch isteği yap
+      const response = await fetch(fullUrl, {
+        ...fetchConfig,
+        method: 'GET'
+      });
 
       if (!response.ok) {
-        throw new Error(`TMDB API error: ${response.status}`);
+        console.log(`❌ ${provider.name} API error: ${response.status} - ${response.statusText}`);
+        throw new Error(`${provider.name} API error: ${response.status}`);
       }
 
       const data = await response.json();
+      console.log(`✅ ${provider.name} API response alındı. Sonuç sayısı: ${data.results?.length || 0}`);
+
       this.apiError = false;
 
       if (data.results) {
-        data.results = data.results.filter(person => person.profile_path);
+        const originalCount = data.results.length;
 
-        // Client-side gender filtering (1=Kadın, 2=Erkek)
-        if (gender !== null) {
-          const beforeFilter = data.results.length;
-          data.results = data.results.filter(person => person.gender === gender);
-          console.log(`🔍 Gender filtering: ${beforeFilter} -> ${data.results.length} (gender=${gender})`);
+        // Fotoğraf/poster olan items'ları filtrele (sağlayıcıya göre)
+        if (categoryConfig.type === 'movie') {
+          data.results = data.results.filter(movie => movie.poster_path);
+          console.log(`🎬 Poster fotoğrafı filtrelemesi: ${originalCount} → ${data.results.length}`);
+        } else {
+          // TMDB için profile_path, diğer API'ler için farklı fieldlar olabilir
+          if (provider.name === 'The Movie Database') {
+            data.results = data.results.filter(person => person.profile_path);
+            console.log(`📷 Profil fotoğrafı filtrelemesi: ${originalCount} → ${data.results.length}`);
+          } else if (provider.name === 'API Ninjas') {
+            // API Ninjas farklı bir format kullanır, filtreleme gerekirse burada yapılır
+            console.log(`🥷 API Ninjas verisi filtreleniyor: ${originalCount} → ${data.results.length}`);
+          }
         }
 
         // Sonuçları karıştır
@@ -165,12 +271,17 @@ class PhotoService {
         data.total_results = data.results.length;
       }
 
-      console.log(`TMDB API Response for gender=${gender}:`, {
+      console.log(`${provider.name} API Response for category=${category}:`, {
+        provider: provider.name,
+        endpoint: url.split('/').pop(),
         current_page: data.page,
         total_pages: data.total_pages,
         total_results: data.total_results,
         filtered_results: data.results?.length,
-        sample_people: data.results?.slice(0, 3).map(p => ({ name: p.name, gender: p.gender }))
+        sample_data: data.results?.slice(0, 3).map(item => ({
+          name: item.name || item.title,
+          type: categoryConfig.type
+        }))
       });
 
       return {
@@ -178,7 +289,7 @@ class PhotoService {
         data: data,
       };
     } catch (error) {
-      console.error('TMDB API Error:', error);
+      console.error('Multi-API Error:', error);
       this.apiError = true;
       this.useTestData = true;
       return {
@@ -190,21 +301,22 @@ class PhotoService {
   }
 
   // TMDB verisini uygulama formatına çevir
-  transformTMDBPerson(person, details = null) {
+  // Transform API data to app format (supports multiple providers)
+  transformTMDBPerson(person, details = null, categoryKey = null) {
+    const imageBaseURL = CategoryAPI.getImageBaseURL(categoryKey) || config.TMDB_IMAGE_BASE_URL;
     const profileImage = person.profile_path
-      ? `${config.TMDB_IMAGE_BASE_URL}${person.profile_path}`
+      ? `${imageBaseURL}${person.profile_path}`
       : null;
 
     return {
       id: person.id,
       name: person.name,
       image: profileImage,
-      category: this.getCategoryFromKnownFor(person.known_for || []),
-      source: 'TMDB',
+      category: this.getCategoryFromPerson(person),
+      source: 'API',
       popularity: person.popularity || 0,
       gender: person.gender === 1 ? 'Kadın' : person.gender === 2 ? 'Erkek' : 'Bilinmeyen',
       knownFor: person.known_for_department || 'unknown',
-      // Detaylar varsa ekle
       ...(details && {
         biography: details.biography || '',
         birthday: details.birthday || '',
@@ -215,37 +327,96 @@ class PhotoService {
     };
   }
 
-  // Bilinen yapıtlardan kategori belirle
-  getCategoryFromKnownFor(knownFor) {
-    if (!knownFor || knownFor.length === 0) return 'Genel';
+  // Transform movie data to app format
+  transformTMDBMovie(movie, details = null, categoryKey = null) {
+    const imageBaseURL = CategoryAPI.getImageBaseURL(categoryKey) || config.TMDB_IMAGE_BASE_URL;
+    const posterImage = movie.poster_path
+      ? `${imageBaseURL}${movie.poster_path}`
+      : null;
 
-    const mediaTypes = knownFor.map(item => item.media_type);
+    return {
+      id: movie.id,
+      name: movie.title || movie.original_title,
+      image: posterImage,
+      category: 'movies',
+      source: 'API',
+      popularity: movie.popularity || 0,
+      releaseDate: movie.release_date || '',
+      overview: movie.overview || '',
+      voteAverage: movie.vote_average || 0,
+      voteCount: movie.vote_count || 0,
+      ...(details && {
+        budget: details.budget || 0,
+        revenue: details.revenue || 0,
+        runtime: details.runtime || 0,
+        genres: details.genres || [],
+        productionCompanies: details.production_companies || [],
+        homepage: details.homepage || '',
+      }),
+    };
+  }
 
-    if (mediaTypes.includes('movie')) return 'Sinema';
-    if (mediaTypes.includes('tv')) return 'Televizyon';
-    if (mediaTypes.includes('person')) return 'Ünlü';
+  getCategoryFromPerson(person) {
+    const department = person.known_for_department;
 
-    return 'Genel';
+    switch (department) {
+      case 'Acting':
+        return 'actors';
+      case 'Directing':
+        return 'actors'; // ünlüler → actors
+      case 'Writing':
+        return 'actors'; // ünlüler → actors
+      case 'Production':
+        return 'actors'; // ünlüler → actors
+      case 'Sound':
+        return 'actors'; // ünlüler → actors (musicians → actors)
+      case 'Camera':
+        return 'actors'; // ünlüler → actors
+      case 'Editing':
+        return 'actors'; // ünlüler → actors
+      case 'Art':
+        return 'actors'; // ünlüler → actors
+      case 'Crew':
+        return 'actors'; // ünlüler → actors
+      default:
+        return 'actors'; // general → actors
+    }
   }
 
   // Test verilerini getir
-  getTestData(page = 1, category = null, gender = null) {
+  getTestData(page = 1, category = null) {
     const itemsPerPage = 4;
     const startIndex = (page - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
 
     let filteredData = TEST_CELEBRITIES;
 
-    // Gender filtresi (test verisinde gender string olarak tutulduğu için)
-    if (gender !== null) {
-      const genderString = gender === 1 ? 'Kadın' : gender === 2 ? 'Erkek' : null;
-      if (genderString) {
-        filteredData = filteredData.filter(person => person.gender === genderString);
+    // Category filtresi
+    if (category !== null) {
+      switch (category) {
+        case 1: // Kadın Ünlüler
+          filteredData = filteredData.filter(person => person.gender === 'Kadın');
+          break;
+        case 2: // Erkek Ünlüler
+          filteredData = filteredData.filter(person => person.gender === 'Erkek');
+          break;
+        case 'actors': // Aktörler
+          filteredData = filteredData.filter(person => person.knownFor === 'Acting');
+          break;
+        case 'musicians': // Müzisyenler
+          filteredData = filteredData.filter(person => person.knownFor === 'Sound');
+          break;
+        case 'writers': // Yazarlar
+          filteredData = filteredData.filter(person => person.knownFor === 'Writing');
+          break;
+        case 'movies': // Filmler
+          filteredData = filteredData.filter(item => item.category === 'movies');
+          break;
+        // Diğer kategoriler için fallback
+        default:
+          // Tüm ünlüler, filtre uygulanmaz
+          break;
       }
-    }
-
-    if (category && category !== 'Genel') {
-      filteredData = filteredData.filter(person => person.category === category);
     }
 
     const pageData = filteredData.slice(startIndex, endIndex);
@@ -266,14 +437,14 @@ class PhotoService {
   }
 
   // Ana fotoğraf getirme metodu
-  async getPhotos(category = null, gender = null) {
+  async getPhotos(category = null) {
     try {
-      console.log(`🎯 getPhotos called with: category=${category}, gender=${gender}`);
+      console.log(`🎯 getPhotos called with: category=${category}`);
 
-      // Eğer gender değişmişse, cache'i temizle
-      if (this.currentGender !== gender || this.currentCategory !== category) {
+      // Eğer category değişmişse, cache'i temizle
+      if (this.currentCategory !== category) {
         if (this.celebrities.length > 0) { // Sadece cache varsa log bas
-          console.log(`🔄 Gender/Category changed from ${this.currentGender}/${this.currentCategory} to ${gender}/${category}, clearing cache`);
+          console.log(`🔄 Category changed from ${this.currentCategory} to ${category}, clearing cache`);
         }
         this.celebrities = [];
         this.currentPage = 1;
@@ -281,7 +452,6 @@ class PhotoService {
 
       // Parametreleri sakla
       this.currentCategory = category;
-      this.currentGender = gender;
       let response;
 
       // Önce TMDB API'yi dene, hata varsa test verisine geç
@@ -289,49 +459,92 @@ class PhotoService {
         // Tamamen rastgele sayfa seçimi (gerçek rastgelelik için)
         const randomPage = Math.floor(Math.random() * 100) + 1;
 
-        console.log(`🎲 Tamamen rastgele sayfa seçiliyor: ${randomPage} (gender: ${gender})`);
-        response = await this.fetchPopularPeople(randomPage, gender);
+        console.log(`🎲 Tamamen rastgele sayfa seçiliyor: ${randomPage} (category: ${category})`);
+        response = await this.fetchPopularPeople(randomPage, category);
 
         // API başarısızsa test verisini kullan
         if (!response.success) {
           console.log('TMDB API başarısız, test verisi kullanılıyor...');
-          response = this.getTestData(this.currentPage, category, gender);
+          response = this.getTestData(this.currentPage, category);
         }
       } else {
         // Zaten test verisi modundayız
-        response = this.getTestData(this.currentPage, category, gender);
+        response = this.getTestData(this.currentPage, category);
       }
 
       if (response.success && response.data.results) {
+        console.log(`✅ Response başarılı, ${response.data.results.length} sonuç alındı`);
         this.totalPages = response.data.total_pages;
 
         // TMDB verilerini transform et (test verisi zaten uygun formatta)
-        let transformedPeople;
+        let transformedItems;
         if (response.data.results[0]?.source === 'TEST') {
           // Test verisi, transform etme
-          transformedPeople = response.data.results;
+          console.log(`📋 Test verisi kullanılıyor`);
+          transformedItems = response.data.results;
         } else {
           // TMDB verisi, transform et
-          transformedPeople = response.data.results
-            .filter(person => person.profile_path)
-            .map(person => this.transformTMDBPerson(person));
+          console.log(`🔄 TMDB verisi transform ediliyor...`);
+          const categoryConfig = CategoryAPI.getConfig(category);
+
+          if (categoryConfig.type === 'movie') {
+            // Movie transformation
+            transformedItems = response.data.results
+              .filter(movie => movie.poster_path)
+              .map(movie => this.transformTMDBMovie(movie));
+            console.log(`   Transform sonrası: ${transformedItems.length} film`);
+            console.log(`   İlk birkaç filmin bilgisi:`, transformedItems.slice(0,3).map(m => `${m.name}: ${m.category}`));
+          } else {
+            // Person transformation
+            transformedItems = response.data.results
+              .filter(person => person.profile_path)
+              .map(person => this.transformTMDBPerson(person));
+            console.log(`   Transform sonrası: ${transformedItems.length} kişi`);
+            console.log(`   İlk birkaç kişinin kategori bilgisi:`, transformedItems.slice(0,3).map(p => `${p.name}: ${p.category}`));
+          }
         }
 
         // Kategori filtresi varsa uygula (sadece TMDB verileri için)
-        let filteredPeople = transformedPeople;
-        if (category && category !== 'Genel' && response.data.results[0]?.source !== 'TEST') {
-          filteredPeople = transformedPeople.filter(person => person.category === category);
+        let filteredItems = transformedItems;
+        if (category && category !== 'general' && response.data.results[0]?.source !== 'TEST') {
+          const categoryConfig = CategoryAPI.getConfig(category);
+          console.log(`🔍 Kategori filtresi uygulanıyor: ${categoryConfig.displayName} (${category})`);
+
+          if (categoryConfig.type === 'movie') {
+            // Movies kategori filtresi gerekmiyor, zaten movie'ler geldi
+            filteredItems = transformedItems;
+            console.log(`   Movies kategorisi: ${filteredItems.length} film`);
+          } else if (category === 1) {
+            // Kadın ünlüler
+            filteredItems = transformedItems.filter(person => person.gender === 'Kadın');
+            console.log(`   Gender filtresi (Kadın) sonrası: ${filteredItems.length} kişi`);
+          } else if (category === 2) {
+            // Erkek ünlüler
+            filteredItems = transformedItems.filter(person => person.gender === 'Erkek');
+            console.log(`   Gender filtresi (Erkek) sonrası: ${filteredItems.length} kişi`);
+          } else {
+            // Profession-based kategoriler
+            filteredItems = transformedItems.filter(person => person.category === category);
+            console.log(`   Profession filtresi (${category}) sonrası: ${filteredItems.length} kişi`);
+          }
+
+          if (categoryConfig.type !== 'movie') {
+            console.log(`   İlk birkaç kişinin bilgisi:`, filteredItems.slice(0,3).map(p => `${p.name} (${p.gender}, ${p.category})`));
+          } else {
+            console.log(`   İlk birkaç filmin bilgisi:`, filteredItems.slice(0,3).map(m => `${m.name} (${m.releaseDate})`));
+          }
         }
 
         // Sonuçları karıştır (tam rastgelelik için)
-        filteredPeople = this.shuffleArray(filteredPeople);
-        console.log(`🎯 ${filteredPeople.length} sonuç karıştırıldı`);
+        filteredItems = this.shuffleArray(filteredItems);
+        console.log(`🎯 ${filteredItems.length} sonuç karıştırıldı`);
 
-        this.celebrities = [...this.celebrities, ...filteredPeople];
+        this.celebrities = [...this.celebrities, ...filteredItems];
+        console.log(`📦 Cache'e eklendi. Toplam cache: ${this.celebrities.length} item`);
 
-        return {
+        const finalResult = {
           success: true,
-          data: filteredPeople,
+          data: filteredItems,
           pagination: {
             currentPage: this.currentPage,
             totalPages: this.totalPages,
@@ -340,6 +553,15 @@ class PhotoService {
           usingTestData: this.useTestData,
           apiError: this.apiError,
         };
+
+        console.log(`🎊 getPhotos sonucu:`, {
+          success: finalResult.success,
+          dataLength: finalResult.data.length,
+          usingTestData: finalResult.usingTestData,
+          apiError: finalResult.apiError
+        });
+
+        return finalResult;
       }
 
       throw new Error('Veri alınamadı');
@@ -524,6 +746,27 @@ class PhotoService {
       console.error('❌ getFreshOpponent error:', error);
       return null;
     }
+  }
+
+  // Category filter'ı resetle
+  resetCategoryFilter() {
+    this.currentCategory = null;
+    console.log('📝 Category filter resetlendi');
+  }
+
+  // Ana sayfa için kategori listesi getir
+  static getHomepageCategories() {
+    return CategoryAPI.getByType('person').concat(CategoryAPI.getByType('movie'));
+  }
+
+  // Belirli bir kategorinin konfigürasyonunu getir
+  static getCategoryConfig(categoryKey) {
+    return CategoryAPI.getConfig(categoryKey);
+  }
+
+  // Tüm kategori konfigürasyonlarını getir
+  static getAllCategories() {
+    return CategoryAPI.getByType('person').concat(CategoryAPI.getByType('movie'));
   }
 }
 

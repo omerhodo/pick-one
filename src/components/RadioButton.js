@@ -25,15 +25,14 @@ const RadioButton = ({ selected, onPress, children, style, textStyle }) => {
 
 const styles = StyleSheet.create({
   radioButton: {
-    paddingVertical: SIZES.margin,
-    paddingHorizontal: SIZES.padding,
+    paddingVertical: SIZES.margin * 0.8,
+    paddingHorizontal: SIZES.margin * 1.2,
     backgroundColor: 'rgba(255,255,255,0.1)',
     borderRadius: SIZES.radius,
     borderWidth: 2,
     borderColor: 'rgba(255,255,255,0.2)',
     alignItems: 'center',
     justifyContent: 'center',
-    minWidth: 100,
   },
   radioButtonSelected: {
     backgroundColor: COLORS.primary,
@@ -44,6 +43,7 @@ const styles = StyleSheet.create({
     fontSize: SIZES.medium,
     fontWeight: '500',
     opacity: 0.8,
+    textAlign: 'center',
   },
   radioTextSelected: {
     color: COLORS.white,

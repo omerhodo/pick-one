@@ -11,7 +11,11 @@ import { ANIMATION_DURATION, COLORS, SIZES } from '../utils/constants';
 import { getNewOpponent, getRandomPair, getUsedOpponents } from '../utils/helpers';
 
 const PickScreen = ({ navigation, route }) => {
-  const { maxSelections = 10, gender } = route?.params || {};
+  const { maxSelections = 10, category } = route?.params || {};
+
+  console.log(`🏆 PickScreen açıldı:`);
+  console.log(`   maxSelections: ${maxSelections}`);
+  console.log(`   category: ${category}`);
 
   const {
     photos,
@@ -226,7 +230,7 @@ const PickScreen = ({ navigation, route }) => {
                   {usingTestData && (
                     <Text style={styles.testDataIndicator}>Demo</Text>
                   )}
-                  <Text style={styles.landscapeCounter}>{selections.length}/{maxSelections}</Text>
+                  <Text style={styles.landscapeCounter}>{selections.length + 1}/{maxSelections}</Text>
                 </View>
               </View>
 
@@ -250,7 +254,7 @@ const PickScreen = ({ navigation, route }) => {
                 {usingTestData && (
                   <Text style={styles.testDataIndicator}>Demo</Text>
                 )}
-                <Text style={styles.portraitCounter}>{selections.length}/{maxSelections}</Text>
+                <Text style={styles.portraitCounter}>{selections.length + 1}/{maxSelections}</Text>
               </View>
             </View>
 

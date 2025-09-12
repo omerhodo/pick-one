@@ -6,14 +6,12 @@ import ApiWarning from '../components/ApiWarning';
 import BlurBackground from '../components/BlurBackground';
 import Button from '../components/Button';
 import SelectorGroup from '../components/SelectorGroup';
+import { UI } from '../config/categoryChoices';
 import { useGame } from '../context/GameContext';
 import { COLORS, SIZES } from '../utils/constants';
 
-const GENDER_OPTIONS = [
-  { value: null, label: 'Hepsi' },
-  { value: 2, label: 'Erkek' },
-  { value: 1, label: 'Kadın' },
-];
+// Kategori konfigürasyonundan UI seçeneklerini al
+const CATEGORY_OPTIONS = UI.getHomepageOptions();
 
 const SELECTION_COUNT_OPTIONS = [
   { value: 10, label: '10' },
@@ -22,12 +20,13 @@ const SELECTION_COUNT_OPTIONS = [
 ];
 
 const HomeScreen = ({ navigation }) => {
-  const { startGame, stats, selections, apiWarning, usingTestData, dismissApiWarning, resetGenderFilter, clearCache } = useGame();
+  const { startGame, apiWarning, usingTestData, dismissApiWarning, clearCache } = useGame();
   const isFirstMount = useRef(true);
-  const previousGender = useRef(null);
+  const previousCategory = useRef(null);
   const isCacheClearingRef = useRef(false);
+  const categorySelectorRef = useRef(null);
 
-  const [selectedGender, setSelectedGender] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedCount, setSelectedCount] = useState(10);
 
   useEffect(() => {
@@ -35,18 +34,18 @@ const HomeScreen = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    if (!isFirstMount.current && !isCacheClearingRef.current && previousGender.current !== selectedGender) {
-      console.log(`🎯 Gender değişti: ${previousGender.current} → ${selectedGender}, cache temizleniyor...`);
+    if (!isFirstMount.current && !isCacheClearingRef.current && previousCategory.current !== selectedCategory) {
+      console.log(`🎯 Kategori değişti: ${previousCategory.current} → ${selectedCategory}, cache temizleniyor...`);
 
       isCacheClearingRef.current = true;
       clearCache();
-      previousGender.current = selectedGender;
+      previousCategory.current = selectedCategory;
 
       setTimeout(() => {
         isCacheClearingRef.current = false;
       }, 100);
     }
-  }, [selectedGender]);
+  }, [selectedCategory]);
 
   useFocusEffect(
     useCallback(() => {
@@ -55,8 +54,13 @@ const HomeScreen = ({ navigation }) => {
 
         isCacheClearingRef.current = true;
         clearCache();
-        setSelectedGender(null);
-        previousGender.current = null;
+        setSelectedCategory(null);
+        previousCategory.current = null;
+
+        // Kategori scroll alanını başa kaydır
+        if (categorySelectorRef.current) {
+          categorySelectorRef.current.scrollTo({ x: 0, animated: true });
+        }
 
         setTimeout(() => {
           isCacheClearingRef.current = false;
@@ -66,15 +70,22 @@ const HomeScreen = ({ navigation }) => {
   );
 
   const handleStartGame = () => {
+    console.log(`🏠 HomeScreen.handleStartGame çağrıldı:`);
+    console.log(`   selectedCategory: ${selectedCategory}`);
+    console.log(`   selectedCount: ${selectedCount}`);
+
     const gameSettings = {
-      gender: selectedGender,
+      category: selectedCategory,
       maxSelections: selectedCount,
     };
 
+    console.log(`🎮 startGame çağrılacak, gameSettings:`, gameSettings);
     startGame(gameSettings);
+
+    console.log(`🗺️  PickScreen'e navigate edilecek`);
     navigation.navigate('PickScreen', {
       maxSelections: selectedCount,
-      gender: selectedGender
+      category: selectedCategory
     });
   };
 
@@ -93,10 +104,12 @@ const HomeScreen = ({ navigation }) => {
 
           <View style={styles.selectorsContainer}>
             <SelectorGroup
-              title="Cinsiyet Seçimi"
-              options={GENDER_OPTIONS}
-              selectedValue={selectedGender}
-              onSelect={setSelectedGender}
+              ref={categorySelectorRef}
+              title="Kategori Seçimi"
+              options={CATEGORY_OPTIONS}
+              selectedValue={selectedCategory}
+              onSelect={setSelectedCategory}
+              horizontal={true}
             />
 
             <SelectorGroup
@@ -109,7 +122,7 @@ const HomeScreen = ({ navigation }) => {
 
           <View style={styles.buttonContainer}>
             <Button
-              title="Oyuna Başla"
+              title="Seçime Başla"
               onPress={handleStartGame}
               size="large"
               style={styles.button}
@@ -135,7 +148,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: SIZES.padding * 2,
+    paddingHorizontal: SIZES.padding,
   },
   header: {
     alignItems: 'center',
@@ -145,7 +158,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     width: '100%',
-    paddingHorizontal: SIZES.padding,
+    paddingHorizontal: 0,
   },
   title: {
     fontSize: SIZES.xl * 1.5,
