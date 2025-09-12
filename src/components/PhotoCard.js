@@ -1,11 +1,13 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { useState } from 'react';
 import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useTranslation } from '../i18n/context';
 import { COLORS, SIZES } from '../utils/constants';
 
 const PhotoCard = ({ photo, onPress, style, showName = true, showDetails = false, isLoading = false }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const { t } = useTranslation();
 
   const handlePress = () => {
     if (onPress && typeof onPress === 'function') {
@@ -60,7 +62,7 @@ const PhotoCard = ({ photo, onPress, style, showName = true, showDetails = false
         {isLoading && (
           <View style={styles.externalLoadingOverlay}>
             <ActivityIndicator size="large" color={COLORS.white} />
-            <Text style={styles.loadingText}>Yeni rakip aranıyor...</Text>
+            <Text style={styles.loadingText}>{t('loading.searchingOpponent')}</Text>
           </View>
         )}
 

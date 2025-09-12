@@ -5,13 +5,14 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import ApiWarning from '../components/ApiWarning';
 import BlurBackground from '../components/BlurBackground';
 import Button from '../components/Button';
+import LanguageSelector from '../components/LanguageSelector';
 import SelectorGroup from '../components/SelectorGroup';
 import { UI } from '../config/categoryChoices';
 import { useGame } from '../context/GameContext';
+import { useTranslation } from '../i18n/context';
 import { COLORS, SIZES } from '../utils/constants';
 
-// Kategori konfigürasyonundan UI seçeneklerini al
-const CATEGORY_OPTIONS = UI.getHomepageOptions();
+const getCategoryOptions = (t) => UI.getHomepageOptions(t);
 
 const SELECTION_COUNT_OPTIONS = [
   { value: 10, label: '10' },
@@ -21,6 +22,7 @@ const SELECTION_COUNT_OPTIONS = [
 
 const HomeScreen = ({ navigation }) => {
   const { startGame, apiWarning, usingTestData, dismissApiWarning, clearCache } = useGame();
+  const { t } = useTranslation();
   const isFirstMount = useRef(true);
   const previousCategory = useRef(null);
   const isCacheClearingRef = useRef(false);
@@ -28,6 +30,8 @@ const HomeScreen = ({ navigation }) => {
 
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedCount, setSelectedCount] = useState(10);
+
+  const categoryOptions = getCategoryOptions(t);
 
   useEffect(() => {
     isFirstMount.current = false;
@@ -57,7 +61,6 @@ const HomeScreen = ({ navigation }) => {
         setSelectedCategory(null);
         previousCategory.current = null;
 
-        // Kategori scroll alanını başa kaydır
         if (categorySelectorRef.current) {
           categorySelectorRef.current.scrollTo({ x: 0, animated: true });
         }
@@ -94,26 +97,28 @@ const HomeScreen = ({ navigation }) => {
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.content}>
           <View style={styles.header}>
-            <Text style={styles.title}>Seç Birini</Text>
+            <Text style={styles.title}>{t('home.title')}</Text>
             {usingTestData && (
               <View style={styles.testDataBadge}>
-                <Text style={styles.testDataText}>Demo Modu</Text>
+                <Text style={styles.testDataText}>{t('app.demoMode')}</Text>
               </View>
             )}
           </View>
 
           <View style={styles.selectorsContainer}>
+            <LanguageSelector style={styles.languageSelector} />
+
             <SelectorGroup
               ref={categorySelectorRef}
-              title="Kategori Seçimi"
-              options={CATEGORY_OPTIONS}
+              title={t('home.categorySelection')}
+              options={categoryOptions}
               selectedValue={selectedCategory}
               onSelect={setSelectedCategory}
               horizontal={true}
             />
 
             <SelectorGroup
-              title="Kaç Seçim?"
+              title={t('home.selectionCount')}
               options={SELECTION_COUNT_OPTIONS}
               selectedValue={selectedCount}
               onSelect={setSelectedCount}
@@ -122,7 +127,7 @@ const HomeScreen = ({ navigation }) => {
 
           <View style={styles.buttonContainer}>
             <Button
-              title="Seçime Başla"
+              title={t('home.startSelection')}
               onPress={handleStartGame}
               size="large"
               style={styles.button}
@@ -217,6 +222,9 @@ const styles = StyleSheet.create({
     color: COLORS.white,
     fontSize: SIZES.small,
     fontWeight: '600',
+  },
+  languageSelector: {
+    marginBottom: SIZES.margin * 2,
   },
 });
 

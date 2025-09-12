@@ -46,6 +46,21 @@ export const CATEGORIES = {
   DEFAULT: ['default', 'Tüm Ünlüler', 'Tümü', '⭐', '#FFA502', 'person', 'TMDB', '/person/popular', {}]
 };
 
+// Helper function to convert category key to translation key
+const getCategoryTranslationKey = (categoryKey) => {
+  const keyMap = {
+    1: 'female',
+    2: 'male',
+    'actors': 'actors',
+    'musicians': 'musicians',
+    'writers': 'writers',
+    'movies': 'movies',
+    'celebrities': 'celebrities',
+    'default': 'all'
+  };
+  return keyMap[categoryKey] || 'all';
+};
+
 // Helper function to convert compact format to full object
 const expandCategory = (compactData) => {
   const [key, name, shortName, icon, color, type, provider, endpoint, params] = compactData;
@@ -196,12 +211,17 @@ export class CategoryAPI {
 // UI Components için compact exports
 export const UI = {
   // Ana sayfa için seçenekler
-  getHomepageOptions: () => [
-    { value: null, label: 'Tüm Ünlüler', description: 'Tüm ünlüler', icon: '⭐' },
+  getHomepageOptions: (t) => [
+    {
+      value: null,
+      label: t ? t('categories.all') : 'Tüm Ünlüler',
+      description: t ? t('categories.allDescription') : 'Tüm ünlüler',
+      icon: '⭐'
+    },
     ...HOMEPAGE_CATEGORIES.map(category => ({
       value: category.key,
-      label: category.displayName,
-      description: category.name,
+      label: t ? t(`categories.${getCategoryTranslationKey(category.key)}`) : category.displayName,
+      description: t ? t(`categories.${getCategoryTranslationKey(category.key)}Description`) : category.name,
       icon: category.icon,
       color: category.color,
       emoji: category.emoji,

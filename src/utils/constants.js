@@ -31,4 +31,5 @@ export const ANIMATION_DURATION = 300;
 export const STORAGE_KEYS = {
   USER_SELECTIONS: '@pick_one_selections',
   USER_STATS: '@pick_one_stats',
+  LANGUAGE: '@pick_one_language',
 };

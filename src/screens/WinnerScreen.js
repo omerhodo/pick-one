@@ -4,10 +4,12 @@ import ConfettiCannon from 'react-native-confetti-cannon';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '../components/Button';
 import PhotoCard from '../components/PhotoCard';
+import { useTranslation } from '../i18n/context';
 import { COLORS, SIZES } from '../utils/constants';
 
 const WinnerScreen = ({ navigation, route }) => {
   const { winner } = route.params;
+  const { t } = useTranslation();
   const scaleAnim = useRef(new Animated.Value(0.5)).current;
   const [showConfetti, setShowConfetti] = useState(false);
 
@@ -47,7 +49,7 @@ const WinnerScreen = ({ navigation, route }) => {
             />
           )}
 
-          <Text style={styles.title}>🎉 Kazanan! 🎉</Text>
+          <Text style={styles.title}>{t('winner.title')}</Text>
 
           <Animated.View
             style={[
@@ -64,7 +66,7 @@ const WinnerScreen = ({ navigation, route }) => {
           </Animated.View>
 
           <Button
-            title="Tekrar Oyna"
+            title={t('winner.playAgain')}
             onPress={handleBackHome}
             size="large"
             style={styles.button}

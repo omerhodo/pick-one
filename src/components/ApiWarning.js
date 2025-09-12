@@ -1,22 +1,25 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useTranslation } from '../i18n/context';
 import { COLORS, SIZES } from '../utils/constants';
 
 const ApiWarning = ({ visible, onDismiss, usingTestData }) => {
+  const { t } = useTranslation();
+
   if (!visible) return null;
 
   return (
     <View style={styles.container}>
       <View style={styles.warningBox}>
         <Text style={styles.warningIcon}>⚠️</Text>
-        <Text style={styles.title}>API Erişim Sorunu</Text>
+        <Text style={styles.title}>{t('apiWarning.title')}</Text>
         <Text style={styles.message}>
           {usingTestData
-            ? 'TMDB API\'ye erişim sağlanamadı. Test verileri kullanılıyor.'
-            : 'TMDB API\'ye bağlanırken sorun yaşandı. Lütfen internet bağlantınızı kontrol edin.'
+            ? t('apiWarning.messageWithTestData')
+            : t('apiWarning.messageWithoutData')
           }
         </Text>
         <TouchableOpacity style={styles.dismissButton} onPress={onDismiss}>
-          <Text style={styles.dismissText}>Anladım</Text>
+          <Text style={styles.dismissText}>{t('apiWarning.dismiss')}</Text>
         </TouchableOpacity>
       </View>
     </View>

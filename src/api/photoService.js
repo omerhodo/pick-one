@@ -10,8 +10,8 @@ const TEST_CELEBRITIES = [
     category: "actors",
     source: "TEST",
     popularity: 95.5,
-    gender: "Erkek",
-    knownFor: "Acting"
+    gender: "male",
+    knownFor: "acting"
   },
   {
     id: 2,
@@ -315,8 +315,10 @@ class PhotoService {
       category: this.getCategoryFromPerson(person),
       source: 'API',
       popularity: person.popularity || 0,
-      gender: person.gender === 1 ? 'Kadın' : person.gender === 2 ? 'Erkek' : 'Bilinmeyen',
-      knownFor: person.known_for_department || 'unknown',
+      genderCode: person.gender, // Keep original code for translation
+      gender: person.gender === 1 ? 'female' : person.gender === 2 ? 'male' : 'unknown',
+      knownForCode: person.known_for_department, // Keep original for translation
+      knownFor: this.getKnownForCategory(person.known_for_department),
       ...(details && {
         biography: details.biography || '',
         birthday: details.birthday || '',
@@ -354,6 +356,31 @@ class PhotoService {
         homepage: details.homepage || '',
       }),
     };
+  }
+
+  getKnownForCategory(department) {
+    switch (department) {
+      case 'Acting':
+        return 'acting';
+      case 'Directing':
+        return 'directing';
+      case 'Writing':
+        return 'writing';
+      case 'Production':
+        return 'production';
+      case 'Sound':
+        return 'sound';
+      case 'Camera':
+        return 'camera';
+      case 'Editing':
+        return 'editing';
+      case 'Art':
+        return 'art';
+      case 'Crew':
+        return 'crew';
+      default:
+        return 'unknown';
+    }
   }
 
   getCategoryFromPerson(person) {

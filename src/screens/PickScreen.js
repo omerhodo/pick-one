@@ -7,11 +7,13 @@ import Button from '../components/Button';
 import Loader from '../components/Loader';
 import PhotoCard from '../components/PhotoCard';
 import { useGame } from '../context/GameContext';
+import { useTranslation } from '../i18n/context';
 import { ANIMATION_DURATION, COLORS, SIZES } from '../utils/constants';
 import { getNewOpponent, getRandomPair, getUsedOpponents } from '../utils/helpers';
 
 const PickScreen = ({ navigation, route }) => {
   const { maxSelections = 10, category } = route?.params || {};
+  const { t } = useTranslation();
 
   console.log(`🏆 PickScreen açıldı:`);
   console.log(`   maxSelections: ${maxSelections}`);
@@ -179,9 +181,9 @@ const PickScreen = ({ navigation, route }) => {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>Yeterli fotoğraf bulunamadı</Text>
+          <Text style={styles.emptyText}>{t('pick.insufficientPhotos')}</Text>
           <Button
-            title="Ana Sayfaya Dön"
+            title={t('pick.backToHome')}
             onPress={handleBackPress}
             style={styles.backButton}
           />
@@ -228,14 +230,16 @@ const PickScreen = ({ navigation, route }) => {
                 />
                 <View style={styles.headerCenter}>
                   {usingTestData && (
-                    <Text style={styles.testDataIndicator}>Demo</Text>
+                    <Text style={styles.testDataIndicator}>{t('app.demo')}</Text>
                   )}
-                  <Text style={styles.landscapeCounter}>{selections.length + 1}/{maxSelections}</Text>
+                  <Text style={styles.landscapeCounter}>
+                    {t('pick.counter', { current: selections.length + 1, total: maxSelections })}
+                  </Text>
                 </View>
               </View>
 
               <View style={styles.landscapeVS}>
-                <Text style={styles.landscapeVSText}>VS</Text>
+                <Text style={styles.landscapeVSText}>{t('pick.vs')}</Text>
               </View>
             </View>
           </View>
@@ -252,9 +256,11 @@ const PickScreen = ({ navigation, route }) => {
               />
               <View style={styles.headerCenter}>
                 {usingTestData && (
-                  <Text style={styles.testDataIndicator}>Demo</Text>
+                  <Text style={styles.testDataIndicator}>{t('app.demo')}</Text>
                 )}
-                <Text style={styles.portraitCounter}>{selections.length + 1}/{maxSelections}</Text>
+                <Text style={styles.portraitCounter}>
+                  {t('pick.counter', { current: selections.length + 1, total: maxSelections })}
+                </Text>
               </View>
             </View>
 
@@ -279,7 +285,7 @@ const PickScreen = ({ navigation, route }) => {
               />
             </Animated.View>
             <View style={styles.portraitVS}>
-              <Text style={styles.portraitVSText}>VS</Text>
+              <Text style={styles.portraitVSText}>{t('pick.vs')}</Text>
             </View>
           </View>
         )}
