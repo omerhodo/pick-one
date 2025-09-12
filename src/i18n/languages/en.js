@@ -33,6 +33,8 @@ export default {
     maleDescription: "Male actors",
     movies: "Movies",
     moviesDescription: "Movies",
+    pokemon: "Pokemon",
+    pokemonDescription: "Pokémon characters",
     celebrities: "Celebrities",
     celebritiesDescription: "Famous people"
   },

@@ -33,6 +33,8 @@ export default {
     maleDescription: "Erkek aktörler",
     movies: "Filmler",
     moviesDescription: "Filmler",
+    pokemon: "Pokemonlar",
+    pokemonDescription: "Pokémon karakterleri",
     celebrities: "Ünlü Kişiler",
     celebritiesDescription: "Ünlü kişiler"
   },

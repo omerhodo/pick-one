@@ -24,6 +24,14 @@ export const API_PROVIDERS = {
     headers: { 'X-Api-Key': config.API_NINJAS_KEY },
     auth: 'header'
   },
+  POKEAPI: {
+    name: 'PokeAPI',
+    baseURL: 'https://pokeapi.co/api/v2',
+    imageBaseURL: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork',
+    apiKey: null,
+    headers: {},
+    auth: 'none'
+  },
   CUSTOM: {
     name: 'Custom API',
     baseURL: 'https://api.example.com/v1',
@@ -41,6 +49,7 @@ export const CATEGORIES = {
   FEMALE: [1, 'Aktiristler', 'Aktirist', '👩‍🎭', '#FF6B9D', 'person', 'TMDB', '/discover/person', { with_gender: 1, sort_by: 'popularity.desc' }],
   MALE: [2, 'Aktörler', 'Aktör', '👨‍🎭', '#4DABF7', 'person', 'TMDB', '/discover/person', { with_gender: 2, sort_by: 'popularity.desc' }],
   MOVIES: ['movies', 'Filmler', 'Film', '🎬', '#FF8787', 'movie', 'TMDB', '/movie/popular', { sort_by: 'popularity.desc' }],
+  POKEMON: ['pokemon', 'Pokemonlar', 'Pokemon', '⚡', '#FFCB05', 'pokemon', 'POKEAPI', '/pokemon', { limit: 20, offset: 0 }],
   CELEBRITIES_NINJAS: ['celebrities', 'Ünlü Kişiler', 'Ünlü', '🌟', '#FFA502', 'person', 'NINJAS', '/celebrity', { category: 'actor' }],
   DEFAULT: ['default', 'Tüm Ünlüler', 'Tümü', '⭐', '#FFA502', 'person', 'TMDB', '/person/popular', {}]
 };
@@ -52,6 +61,7 @@ const getCategoryTranslationKey = (categoryKey) => {
     1: 'female',
     2: 'male',
     'movies': 'movies',
+    'pokemon': 'pokemon',
     'celebrities': 'celebrities',
     'default': 'all'
   };
@@ -68,7 +78,7 @@ const expandCategory = (compactData) => {
 };
 
 export const HOMEPAGE_CATEGORIES = [
-  'POPULAR_FEMALE', 'POPULAR_MALE', 'FEMALE', 'MALE', 'MOVIES'
+  'POPULAR_FEMALE', 'POPULAR_MALE', 'FEMALE', 'MALE', 'MOVIES', 'POKEMON'
 ].map(key => expandCategory(CATEGORIES[key]));
 
 export class CategoryAPI {
@@ -115,7 +125,7 @@ export class CategoryAPI {
   static normalizeKey(key) {
     const keyMap = {
       'popular_female': 'POPULAR_FEMALE', 'popular_male': 'POPULAR_MALE',
-      1: 'FEMALE', 2: 'MALE', 'movies': 'MOVIES', 'default': 'DEFAULT'
+      1: 'FEMALE', 2: 'MALE', 'movies': 'MOVIES', 'pokemon': 'POKEMON', 'default': 'DEFAULT'
     };
     return keyMap[key] || 'DEFAULT';
   }

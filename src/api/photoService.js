@@ -197,8 +197,75 @@ class PhotoService {
     return shuffled;
   }
 
+  async fetchPokemon(page = 1) {
+    try {
+      const limit = 20;
+      const maxPokemon = 1010;
+      const maxOffset = Math.max(0, maxPokemon - limit);
+      const offset = Math.floor(Math.random() * maxOffset);
+
+      console.log(`🐾 PokéAPI çağrısı yapılıyor:`);
+      console.log(`   Limit: ${limit}, Offset: ${offset} (Max: ${maxOffset})`);
+
+      const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`);
+
+      if (!response.ok) {
+        throw new Error(`PokéAPI error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log(`✅ PokéAPI response alındı. Pokémon sayısı: ${data.results.length}`);
+
+      const pokemonDetails = await Promise.all(
+        data.results.slice(0, 20).map(async (pokemon, index) => {
+          try {
+            const detailResponse = await fetch(pokemon.url);
+            const detail = await detailResponse.json();
+
+            return {
+              id: detail.id,
+              name: detail.name,
+              url: pokemon.url,
+              sprite: detail.sprites?.other?.['official-artwork']?.front_default || detail.sprites?.front_default,
+              height: detail.height,
+              weight: detail.weight,
+              types: detail.types?.map(t => t.type.name) || []
+            };
+          } catch (error) {
+            console.log(`   Pokemon ${pokemon.name} detayı alınamadı:`, error.message);
+            return null;
+          }
+        })
+      );
+
+      const validPokemon = pokemonDetails.filter(p => p && p.sprite);
+      console.log(`🎨 Sprite filtrelemesi: ${pokemonDetails.length} → ${validPokemon.length}`);
+
+      return {
+        success: true,
+        data: {
+          results: validPokemon,
+          page: page,
+          total_pages: Math.ceil(maxPokemon / limit),
+          total_results: validPokemon.length
+        }
+      };
+    } catch (error) {
+      console.error('PokéAPI Error:', error);
+      return {
+        success: false,
+        error: error.message,
+        data: null
+      };
+    }
+  }
+
   async fetchPopularPeople(page = 1, category = null) {
     try {
+      if (category === 'pokemon') {
+        return await this.fetchPokemon(page);
+      }
+
       const randomPage = Math.floor(Math.random() * 500) + 1;
 
       // CategoryAPI'den kategori ve sağlayıcı bilgilerini al
@@ -209,7 +276,6 @@ class PhotoService {
       const headers = CategoryAPI.getHeaders(category);
       const fetchConfig = CategoryAPI.getFetchConfig(category);
 
-      // API key kontrolü (sadece gerekli olan sağlayıcılar için)
       if ((provider.name === 'The Movie Database' && (!config.TMDB_API_KEY || config.TMDB_API_KEY === 'demo_key')) ||
           (provider.name === 'API Ninjas' && (!config.API_NINJAS_KEY || config.API_NINJAS_KEY === 'demo_key'))) {
         throw new Error(`${provider.name} API key bulunamadı`);
@@ -222,7 +288,6 @@ class PhotoService {
       console.log(`   Params:`, params);
       console.log(`   Headers:`, headers);
 
-      // URL parametrelerini oluştur
       const urlParams = new URLSearchParams({
         page: randomPage.toString(),
         language: 'tr-TR', // TMDB için
@@ -232,7 +297,6 @@ class PhotoService {
       const fullUrl = `${url}?${urlParams}`;
       console.log(`   Full URL: ${fullUrl}`);
 
-      // Fetch isteği yap
       const response = await fetch(fullUrl, {
         ...fetchConfig,
         method: 'GET'
@@ -251,22 +315,18 @@ class PhotoService {
       if (data.results) {
         const originalCount = data.results.length;
 
-        // Fotoğraf/poster olan items'ları filtrele (sağlayıcıya göre)
         if (categoryConfig.type === 'movie') {
           data.results = data.results.filter(movie => movie.poster_path);
           console.log(`🎬 Poster fotoğrafı filtrelemesi: ${originalCount} → ${data.results.length}`);
         } else {
-          // TMDB için profile_path, diğer API'ler için farklı fieldlar olabilir
           if (provider.name === 'The Movie Database') {
             data.results = data.results.filter(person => person.profile_path);
             console.log(`📷 Profil fotoğrafı filtrelemesi: ${originalCount} → ${data.results.length}`);
           } else if (provider.name === 'API Ninjas') {
-            // API Ninjas farklı bir format kullanır, filtreleme gerekirse burada yapılır
             console.log(`🥷 API Ninjas verisi filtreleniyor: ${originalCount} → ${data.results.length}`);
           }
         }
 
-        // Sonuçları karıştır
         data.results = this.shuffleArray(data.results);
         data.total_results = data.results.length;
       }
@@ -300,8 +360,6 @@ class PhotoService {
     }
   }
 
-  // TMDB verisini uygulama formatına çevir
-  // Transform API data to app format (supports multiple providers)
   transformTMDBPerson(person, details = null, categoryKey = null) {
     const imageBaseURL = CategoryAPI.getImageBaseURL(categoryKey) || config.TMDB_IMAGE_BASE_URL;
     const profileImage = person.profile_path
@@ -329,7 +387,6 @@ class PhotoService {
     };
   }
 
-  // Transform movie data to app format
   transformTMDBMovie(movie, details = null, categoryKey = null) {
     const imageBaseURL = CategoryAPI.getImageBaseURL(categoryKey) || config.TMDB_IMAGE_BASE_URL;
     const posterImage = movie.poster_path
@@ -356,6 +413,27 @@ class PhotoService {
         homepage: details.homepage || '',
       }),
     };
+  }
+
+  transformPokemon(pokemon) {
+    return {
+      id: pokemon.id,
+      name: this.capitalizePokemonName(pokemon.name),
+      image: pokemon.sprite,
+      category: 'pokemon',
+      source: 'API',
+      popularity: 1000 - pokemon.id,
+      height: pokemon.height,
+      weight: pokemon.weight,
+      types: pokemon.types,
+      pokemonId: pokemon.id
+    };
+  }
+
+  capitalizePokemonName(name) {
+    return name.split('-').map(word =>
+      word.charAt(0).toUpperCase() + word.slice(1)
+    ).join(' ');
   }
 
   getKnownForCategory(department) {
@@ -503,12 +581,18 @@ class PhotoService {
         console.log(`✅ Response başarılı, ${response.data.results.length} sonuç alındı`);
         this.totalPages = response.data.total_pages;
 
-        // TMDB verilerini transform et (test verisi zaten uygun formatta)
+        // Verilerini transform et (test verisi zaten uygun formatta)
         let transformedItems;
         if (response.data.results[0]?.source === 'TEST') {
           // Test verisi, transform etme
           console.log(`📋 Test verisi kullanılıyor`);
           transformedItems = response.data.results;
+        } else if (category === 'pokemon') {
+          // Pokémon transformation
+          console.log(`⚡ Pokémon verisi transform ediliyor...`);
+          transformedItems = response.data.results.map(pokemon => this.transformPokemon(pokemon));
+          console.log(`   Transform sonrası: ${transformedItems.length} Pokémon`);
+          console.log(`   İlk birkaç Pokémon:`, transformedItems.slice(0,3).map(p => `${p.name}: ${p.types?.join(', ')}`));
         } else {
           // TMDB verisi, transform et
           console.log(`🔄 TMDB verisi transform ediliyor...`);
@@ -541,6 +625,10 @@ class PhotoService {
             // Movies kategori filtresi gerekmiyor, zaten movie'ler geldi
             filteredItems = transformedItems;
             console.log(`   Movies kategorisi: ${filteredItems.length} film`);
+          } else if (categoryConfig.type === 'pokemon') {
+            // Pokémon kategori filtresi gerekmiyor, zaten pokémon'lar geldi
+            filteredItems = transformedItems;
+            console.log(`   Pokémon kategorisi: ${filteredItems.length} Pokémon`);
           } else if (category === 'popular_female') {
             filteredItems = transformedItems.filter(person => person.gender === 'Kadın');
             console.log(`   Popüler Gender filtresi (Kadın) sonrası: ${filteredItems.length} kişi`);
@@ -561,7 +649,9 @@ class PhotoService {
             console.log(`   Profession filtresi (${category}) sonrası: ${filteredItems.length} kişi`);
           }
 
-          if (categoryConfig.type !== 'movie') {
+          if (categoryConfig.type === 'pokemon') {
+            console.log(`   İlk birkaç Pokémon bilgisi:`, filteredItems.slice(0,3).map(p => `${p.name} (${p.types?.join('/')}, ID: ${p.pokemonId})`));
+          } else if (categoryConfig.type !== 'movie') {
             console.log(`   İlk birkaç kişinin bilgisi:`, filteredItems.slice(0,3).map(p => `${p.name} (${p.gender}, ${p.category})`));
           } else {
             console.log(`   İlk birkaç filmin bilgisi:`, filteredItems.slice(0,3).map(m => `${m.name} (${m.releaseDate})`));
