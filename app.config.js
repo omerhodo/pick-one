@@ -16,14 +16,14 @@ export default {
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.pickone.app"
+      "bundleIdentifier": "com.omerhodo.pickone"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#1d4ed8"
       },
-      "package": "com.pickone.app",
+      "package": "com.omerhodo.pickone",
       "edgeToEdgeEnabled": true
     },
     "web": {
