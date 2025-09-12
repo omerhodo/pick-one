@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
   },
   horizontalContainer: {
     paddingLeft: SIZES.margin,
-    paddingRight: SIZES.margin,
+    paddingRight: 0,
     gap: SIZES.margin * 0.6,
     alignItems: 'center',
   },

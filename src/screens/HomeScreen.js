@@ -134,6 +134,7 @@ const HomeScreen = ({ navigation }) => {
               selectedValue={selectedCategory}
               onSelect={setSelectedCategory}
               horizontal={true}
+              style={styles.categorySelector}
             />
 
             <SelectorGroup
@@ -254,6 +255,11 @@ const styles = StyleSheet.create({
   languageSelector: {
     marginBottom: SIZES.margin * 2,
     width: '100%',
+  },
+  categorySelector: {
+    marginHorizontal: -SIZES.padding, // Negative margin to extend beyond parent padding
+    width: Dimensions.get('window').width, // Use full screen width
+    alignSelf: 'center',
   },
 });
 
