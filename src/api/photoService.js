@@ -10,7 +10,7 @@ const TEST_CELEBRITIES = [
     category: "actors",
     source: "TEST",
     popularity: 95.5,
-    gender: "male",
+    gender: "Erkek",
     knownFor: "acting"
   },
   {
@@ -316,7 +316,7 @@ class PhotoService {
       source: 'API',
       popularity: person.popularity || 0,
       genderCode: person.gender, // Keep original code for translation
-      gender: person.gender === 1 ? 'female' : person.gender === 2 ? 'male' : 'unknown',
+      gender: person.gender === 1 ? 'Kadın' : person.gender === 2 ? 'Erkek' : 'unknown',
       knownForCode: person.known_for_department, // Keep original for translation
       knownFor: this.getKnownForCategory(person.known_for_department),
       ...(details && {
@@ -541,6 +541,12 @@ class PhotoService {
             // Movies kategori filtresi gerekmiyor, zaten movie'ler geldi
             filteredItems = transformedItems;
             console.log(`   Movies kategorisi: ${filteredItems.length} film`);
+          } else if (category === 'popular_female') {
+            filteredItems = transformedItems.filter(person => person.gender === 'Kadın');
+            console.log(`   Popüler Gender filtresi (Kadın) sonrası: ${filteredItems.length} kişi`);
+          } else if (category === 'popular_male') {
+            filteredItems = transformedItems.filter(person => person.gender === 'Erkek');
+            console.log(`   Popüler Gender filtresi (Erkek) sonrası: ${filteredItems.length} kişi`);
           } else if (category === 1) {
             // Kadın ünlüler
             filteredItems = transformedItems.filter(person => person.gender === 'Kadın');

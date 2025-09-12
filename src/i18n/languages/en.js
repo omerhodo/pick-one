@@ -23,6 +23,10 @@ export default {
   categories: {
     all: "All Celebrities",
     allDescription: "All celebrities",
+    popularFemale: "Popular Actresses",
+    popularFemaleDescription: "Most popular female actors",
+    popularMale: "Popular Actors",
+    popularMaleDescription: "Most popular male actors",
     female: "Actresses",
     femaleDescription: "Female actors",
     male: "Actors",

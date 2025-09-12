@@ -23,6 +23,10 @@ export default {
   categories: {
     all: "Tüm Ünlüler",
     allDescription: "Tüm ünlüler",
+    popularFemale: "Popüler Aktiristler",
+    popularFemaleDescription: "En popüler kadın aktörler",
+    popularMale: "Popüler Aktörler",
+    popularMaleDescription: "En popüler erkek aktörler",
     female: "Aktiristler",
     femaleDescription: "Kadın aktörler",
     male: "Aktörler",

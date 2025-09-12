@@ -36,6 +36,8 @@ export const API_PROVIDERS = {
 // Compact Categories Configuration
 // Format: [key, name, shortName, icon, color, type, provider, endpoint, params]
 export const CATEGORIES = {
+  POPULAR_FEMALE: ['popular_female', 'Popüler Aktiristler', 'Popüler Aktirist', '🌟👩‍🎭', '#FF1493', 'person', 'TMDB', '/person/popular', { }],
+  POPULAR_MALE: ['popular_male', 'Popüler Aktörler', 'Popüler Aktör', '🌟👨‍🎭', '#1E90FF', 'person', 'TMDB', '/person/popular', { }],
   FEMALE: [1, 'Aktiristler', 'Aktirist', '👩‍🎭', '#FF6B9D', 'person', 'TMDB', '/discover/person', { with_gender: 1, sort_by: 'popularity.desc' }],
   MALE: [2, 'Aktörler', 'Aktör', '👨‍🎭', '#4DABF7', 'person', 'TMDB', '/discover/person', { with_gender: 2, sort_by: 'popularity.desc' }],
   MOVIES: ['movies', 'Filmler', 'Film', '🎬', '#FF8787', 'movie', 'TMDB', '/movie/popular', { sort_by: 'popularity.desc' }],
@@ -45,6 +47,8 @@ export const CATEGORIES = {
 
 const getCategoryTranslationKey = (categoryKey) => {
   const keyMap = {
+    'popular_female': 'popularFemale',
+    'popular_male': 'popularMale',
     1: 'female',
     2: 'male',
     'movies': 'movies',
@@ -64,7 +68,7 @@ const expandCategory = (compactData) => {
 };
 
 export const HOMEPAGE_CATEGORIES = [
-  'FEMALE', 'MALE', 'MOVIES'
+  'POPULAR_FEMALE', 'POPULAR_MALE', 'FEMALE', 'MALE', 'MOVIES'
 ].map(key => expandCategory(CATEGORIES[key]));
 
 export class CategoryAPI {
@@ -110,9 +114,8 @@ export class CategoryAPI {
 
   static normalizeKey(key) {
     const keyMap = {
-      1: 'FEMALE', 2: 'MALE', 'actors': 'ACTORS', 'musicians': 'MUSICIANS',
-      'writers': 'WRITERS', 'movies': 'MOVIES', 'celebrities': 'CELEBRITIES_NINJAS',
-      'default': 'DEFAULT'
+      'popular_female': 'POPULAR_FEMALE', 'popular_male': 'POPULAR_MALE',
+      1: 'FEMALE', 2: 'MALE', 'movies': 'MOVIES', 'default': 'DEFAULT'
     };
     return keyMap[key] || 'DEFAULT';
   }
