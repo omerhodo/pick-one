@@ -89,8 +89,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   horizontalContainer: {
-    paddingLeft: SIZES.margin,
-    paddingRight: 0,
+    paddingLeft: SIZES.marginLg,
+    paddingRight: SIZES.marginLg,
     gap: SIZES.margin * 0.6,
     alignItems: 'center',
   },

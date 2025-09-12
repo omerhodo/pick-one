@@ -23,6 +23,7 @@ export const SIZES = {
   body: 14,
   padding: 20,
   margin: 16,
+  marginLg: 32,
   radius: 12,
 };
 
