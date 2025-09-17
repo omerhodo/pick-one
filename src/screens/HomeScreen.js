@@ -87,19 +87,13 @@ const HomeScreen = ({ navigation }) => {
   );
 
   const handleStartGame = () => {
-    console.log(`🏠 HomeScreen.handleStartGame çağrıldı:`);
-    console.log(`   selectedCategory: ${selectedCategory}`);
-    console.log(`   selectedCount: ${selectedCount}`);
-
     const gameSettings = {
       category: selectedCategory,
       maxSelections: selectedCount,
     };
 
-    console.log(`🎮 startGame çağrılacak, gameSettings:`, gameSettings);
     startGame(gameSettings);
 
-    console.log(`🗺️  PickScreen'e navigate edilecek`);
     navigation.navigate('PickScreen', {
       maxSelections: selectedCount,
       category: selectedCategory

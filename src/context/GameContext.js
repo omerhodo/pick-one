@@ -122,11 +122,9 @@ export const GameProvider = ({ children }) => {
 
   const loadPhotos = async (category = null) => {
     try {
-      console.log(`🎯 GameContext.loadPhotos çağrıldı: category=${category}`);
       dispatch({ type: ActionTypes.SET_LOADING, payload: true });
 
       const photosResponse = await photoService.getPhotos(category);
-      console.log(`📦 PhotoService'den gelen response:`, photosResponse);
 
       if (photosResponse.success) {
         dispatch({
@@ -230,13 +228,10 @@ export const GameProvider = ({ children }) => {
   };
 
   const startGame = (gameSettings = {}) => {
-    console.log(`🎮 startGame çağrıldı, gameSettings:`, gameSettings);
     dispatch({ type: ActionTypes.START_GAME });
     dispatch({ type: ActionTypes.SET_CURRENT_PAIR, payload: null });
 
-    // Oyunu yeni ayarlarla başlat
     if (gameSettings.category !== undefined || gameSettings.maxSelections !== undefined) {
-      console.log(`📤 PhotoService cache temizleniyor ve loadPhotos çağrılıyor: category=${gameSettings.category}`);
       photoService.clearCache();
       loadPhotos(gameSettings.category);
     }
@@ -248,7 +243,6 @@ export const GameProvider = ({ children }) => {
       const { clearAllData } = await import('../storage/storage');
       await clearAllData();
 
-      // Clear photo service cache
       photoService.clearCache();
 
       dispatch({ type: ActionTypes.RESET_GAME });

@@ -204,9 +204,6 @@ class PhotoService {
       const maxOffset = Math.max(0, maxPokemon - limit);
       const offset = Math.floor(Math.random() * maxOffset);
 
-      console.log(`🐾 PokéAPI çağrısı yapılıyor:`);
-      console.log(`   Limit: ${limit}, Offset: ${offset} (Max: ${maxOffset})`);
-
       const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`);
 
       if (!response.ok) {
@@ -214,7 +211,6 @@ class PhotoService {
       }
 
       const data = await response.json();
-      console.log(`✅ PokéAPI response alındı. Pokémon sayısı: ${data.results.length}`);
 
       const pokemonDetails = await Promise.all(
         data.results.slice(0, 20).map(async (pokemon, index) => {
@@ -239,7 +235,6 @@ class PhotoService {
       );
 
       const validPokemon = pokemonDetails.filter(p => p && p.sprite);
-      console.log(`🎨 Sprite filtrelemesi: ${pokemonDetails.length} → ${validPokemon.length}`);
 
       return {
         success: true,
@@ -251,7 +246,6 @@ class PhotoService {
         }
       };
     } catch (error) {
-      console.error('PokéAPI Error:', error);
       return {
         success: false,
         error: error.message,
@@ -266,9 +260,14 @@ class PhotoService {
         return await this.fetchPokemon(page);
       }
 
-      const randomPage = Math.floor(Math.random() * 500) + 1;
+      const normalizedCategory = String(category);
+      let randomPage;
+      if (normalizedCategory === 'popular_female' || normalizedCategory === 'popular_male') {
+        randomPage = Math.floor(Math.random() * 10) + 1;
+      } else {
+        randomPage = Math.floor(Math.random() * 500) + 1;
+      }
 
-      // CategoryAPI'den kategori ve sağlayıcı bilgilerini al
       const categoryConfig = CategoryAPI.getConfig(category);
       const provider = CategoryAPI.getProvider(category);
       const url = CategoryAPI.getFullURL(category);
@@ -468,202 +467,97 @@ class PhotoService {
       case 'Acting':
         return 'actors';
       case 'Directing':
-        return 'actors'; // ünlüler → actors
+        return 'actors';
       case 'Writing':
-        return 'actors'; // ünlüler → actors
+        return 'actors';
       case 'Production':
-        return 'actors'; // ünlüler → actors
+        return 'actors';
       case 'Sound':
-        return 'actors'; // ünlüler → actors (musicians → actors)
+        return 'actors';
       case 'Camera':
-        return 'actors'; // ünlüler → actors
+        return 'actors';
       case 'Editing':
-        return 'actors'; // ünlüler → actors
+        return 'actors';
       case 'Art':
-        return 'actors'; // ünlüler → actors
+        return 'actors';
       case 'Crew':
-        return 'actors'; // ünlüler → actors
+        return 'actors';
       default:
-        return 'actors'; // general → actors
+        return 'actors';
     }
   }
 
-  // Test verilerini getir
-  getTestData(page = 1, category = null) {
-    const itemsPerPage = 4;
-    const startIndex = (page - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-
-    let filteredData = TEST_CELEBRITIES;
-
-    // Category filtresi
-    if (category !== null) {
-      switch (category) {
-        case 1: // Kadın Ünlüler
-          filteredData = filteredData.filter(person => person.gender === 'Kadın');
-          break;
-        case 2: // Erkek Ünlüler
-          filteredData = filteredData.filter(person => person.gender === 'Erkek');
-          break;
-        case 'actors': // Aktörler
-          filteredData = filteredData.filter(person => person.knownFor === 'Acting');
-          break;
-        case 'musicians': // Müzisyenler
-          filteredData = filteredData.filter(person => person.knownFor === 'Sound');
-          break;
-        case 'writers': // Yazarlar
-          filteredData = filteredData.filter(person => person.knownFor === 'Writing');
-          break;
-        case 'movies': // Filmler
-          filteredData = filteredData.filter(item => item.category === 'movies');
-          break;
-        // Diğer kategoriler için fallback
-        default:
-          // Tüm ünlüler, filtre uygulanmaz
-          break;
-      }
-    }
-
-    const pageData = filteredData.slice(startIndex, endIndex);
-    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-
-    return {
-      success: true,
-      data: {
-        results: pageData,
-        page: page,
-        total_pages: totalPages,
-        total_results: filteredData.length
-      }
-    };
-  }  // API durumunu kontrol et
   hasApiError() {
     return this.apiError;
   }
 
-  // Ana fotoğraf getirme metodu
   async getPhotos(category = null) {
     try {
-      console.log(`🎯 getPhotos called with: category=${category}`);
-
-      // Eğer category değişmişse, cache'i temizle
       if (this.currentCategory !== category) {
-        if (this.celebrities.length > 0) { // Sadece cache varsa log bas
+        if (this.celebrities.length > 0) {
           console.log(`🔄 Category changed from ${this.currentCategory} to ${category}, clearing cache`);
         }
         this.celebrities = [];
         this.currentPage = 1;
       }
 
-      // Parametreleri sakla
       this.currentCategory = category;
       let response;
 
-      // Önce TMDB API'yi dene, hata varsa test verisine geç
       if (!this.useTestData) {
-        // Tamamen rastgele sayfa seçimi (gerçek rastgelelik için)
         const randomPage = Math.floor(Math.random() * 100) + 1;
 
-        console.log(`🎲 Tamamen rastgele sayfa seçiliyor: ${randomPage} (category: ${category})`);
         response = await this.fetchPopularPeople(randomPage, category);
-
-        // API başarısızsa test verisini kullan
-        if (!response.success) {
-          console.log('TMDB API başarısız, test verisi kullanılıyor...');
-          response = this.getTestData(this.currentPage, category);
-        }
-      } else {
-        // Zaten test verisi modundayız
-        response = this.getTestData(this.currentPage, category);
       }
 
       if (response.success && response.data.results) {
-        console.log(`✅ Response başarılı, ${response.data.results.length} sonuç alındı`);
         this.totalPages = response.data.total_pages;
 
-        // Verilerini transform et (test verisi zaten uygun formatta)
         let transformedItems;
         if (response.data.results[0]?.source === 'TEST') {
-          // Test verisi, transform etme
-          console.log(`📋 Test verisi kullanılıyor`);
           transformedItems = response.data.results;
         } else if (category === 'pokemon') {
-          // Pokémon transformation
-          console.log(`⚡ Pokémon verisi transform ediliyor...`);
           transformedItems = response.data.results.map(pokemon => this.transformPokemon(pokemon));
-          console.log(`   Transform sonrası: ${transformedItems.length} Pokémon`);
-          console.log(`   İlk birkaç Pokémon:`, transformedItems.slice(0,3).map(p => `${p.name}: ${p.types?.join(', ')}`));
         } else {
-          // TMDB verisi, transform et
-          console.log(`🔄 TMDB verisi transform ediliyor...`);
           const categoryConfig = CategoryAPI.getConfig(category);
 
           if (categoryConfig.type === 'movie') {
-            // Movie transformation
             transformedItems = response.data.results
               .filter(movie => movie.poster_path)
               .map(movie => this.transformTMDBMovie(movie));
-            console.log(`   Transform sonrası: ${transformedItems.length} film`);
-            console.log(`   İlk birkaç filmin bilgisi:`, transformedItems.slice(0,3).map(m => `${m.name}: ${m.category}`));
           } else {
-            // Person transformation
             transformedItems = response.data.results
               .filter(person => person.profile_path)
               .map(person => this.transformTMDBPerson(person));
-            console.log(`   Transform sonrası: ${transformedItems.length} kişi`);
-            console.log(`   İlk birkaç kişinin kategori bilgisi:`, transformedItems.slice(0,3).map(p => `${p.name}: ${p.category}`));
           }
         }
 
-        // Kategori filtresi varsa uygula (sadece TMDB verileri için)
         let filteredItems = transformedItems;
         if (category && category !== 'general' && response.data.results[0]?.source !== 'TEST') {
           const categoryConfig = CategoryAPI.getConfig(category);
           console.log(`🔍 Kategori filtresi uygulanıyor: ${categoryConfig.displayName} (${category})`);
 
           if (categoryConfig.type === 'movie') {
-            // Movies kategori filtresi gerekmiyor, zaten movie'ler geldi
             filteredItems = transformedItems;
-            console.log(`   Movies kategorisi: ${filteredItems.length} film`);
           } else if (categoryConfig.type === 'pokemon') {
-            // Pokémon kategori filtresi gerekmiyor, zaten pokémon'lar geldi
             filteredItems = transformedItems;
-            console.log(`   Pokémon kategorisi: ${filteredItems.length} Pokémon`);
           } else if (category === 'popular_female') {
             filteredItems = transformedItems.filter(person => person.gender === 'Kadın');
-            console.log(`   Popüler Gender filtresi (Kadın) sonrası: ${filteredItems.length} kişi`);
           } else if (category === 'popular_male') {
             filteredItems = transformedItems.filter(person => person.gender === 'Erkek');
-            console.log(`   Popüler Gender filtresi (Erkek) sonrası: ${filteredItems.length} kişi`);
           } else if (category === 1) {
-            // Kadın ünlüler
             filteredItems = transformedItems.filter(person => person.gender === 'Kadın');
-            console.log(`   Gender filtresi (Kadın) sonrası: ${filteredItems.length} kişi`);
           } else if (category === 2) {
-            // Erkek ünlüler
             filteredItems = transformedItems.filter(person => person.gender === 'Erkek');
-            console.log(`   Gender filtresi (Erkek) sonrası: ${filteredItems.length} kişi`);
           } else {
-            // Profession-based kategoriler
             filteredItems = transformedItems.filter(person => person.category === category);
-            console.log(`   Profession filtresi (${category}) sonrası: ${filteredItems.length} kişi`);
-          }
-
-          if (categoryConfig.type === 'pokemon') {
-            console.log(`   İlk birkaç Pokémon bilgisi:`, filteredItems.slice(0,3).map(p => `${p.name} (${p.types?.join('/')}, ID: ${p.pokemonId})`));
-          } else if (categoryConfig.type !== 'movie') {
-            console.log(`   İlk birkaç kişinin bilgisi:`, filteredItems.slice(0,3).map(p => `${p.name} (${p.gender}, ${p.category})`));
-          } else {
-            console.log(`   İlk birkaç filmin bilgisi:`, filteredItems.slice(0,3).map(m => `${m.name} (${m.releaseDate})`));
           }
         }
 
-        // Sonuçları karıştır (tam rastgelelik için)
         filteredItems = this.shuffleArray(filteredItems);
         console.log(`🎯 ${filteredItems.length} sonuç karıştırıldı`);
 
         this.celebrities = [...this.celebrities, ...filteredItems];
-        console.log(`📦 Cache'e eklendi. Toplam cache: ${this.celebrities.length} item`);
 
         const finalResult = {
           success: true,
@@ -677,13 +571,6 @@ class PhotoService {
           apiError: this.apiError,
         };
 
-        console.log(`🎊 getPhotos sonucu:`, {
-          success: finalResult.success,
-          dataLength: finalResult.data.length,
-          usingTestData: finalResult.usingTestData,
-          apiError: finalResult.apiError
-        });
-
         return finalResult;
       }
 
@@ -691,7 +578,6 @@ class PhotoService {
     } catch (error) {
       console.error('GetPhotos Error:', error);
 
-      // Son çare olarak test verisini dene
       if (!this.useTestData) {
         console.log('Acil durum: Test verisi kullanılıyor...');
         this.useTestData = true;
@@ -711,8 +597,6 @@ class PhotoService {
 
   async getRandomPair(excludeIds = []) {
     try {
-      console.log('🎯 getRandomPair çağrıldı, excludeIds:', excludeIds);
-
       let response = await this.getPhotos(this.currentCategory, this.currentGender);
 
       if (!response.success) {
@@ -767,8 +651,6 @@ class PhotoService {
           };
         }
       }
-
-      console.log('✅ Seçilen çift:', selectedPair.map(p => `${p.name} (ID: ${p.id})`));
 
       return {
         success: true,
