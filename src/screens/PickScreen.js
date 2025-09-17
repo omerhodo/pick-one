@@ -15,10 +15,6 @@ const PickScreen = ({ navigation, route }) => {
   const { maxSelections = 10, category } = route?.params || {};
   const { t } = useTranslation();
 
-  console.log(`🏆 PickScreen açıldı:`);
-  console.log(`   maxSelections: ${maxSelections}`);
-  console.log(`   category: ${category}`);
-
   const {
     photos,
     currentPair,
@@ -59,7 +55,6 @@ const PickScreen = ({ navigation, route }) => {
           setCurrentPair([currentWinner, newOpponent]);
         }
       } else {
-        // currentWinner yok, yeni pair oluştur
         const pair = getRandomPair(photos, [], selections, null);
         if (pair) {
           setCurrentPair(pair);
@@ -127,23 +122,19 @@ const PickScreen = ({ navigation, route }) => {
               setCurrentPair([freshOpponent, selectedPhoto]);
             }
           } else {
-            console.log('⚠️ Fresh opponent bulunamadı, mevcut verilerden deneniyor...');
             const newOpponent = getNewOpponent(selectedPhoto, photos, usedOpponentIds);
 
             if (newOpponent) {
-              console.log(`✅ Mevcut verilerden opponent bulundu: ${newOpponent.name}`);
               if (selectedPhotoIndex === 0) {
                 setCurrentPair([selectedPhoto, newOpponent]);
               } else {
                 setCurrentPair([newOpponent, selectedPhoto]);
               }
             } else {
-              console.log('⚠️ Yeni rakip bulunamadı, currentWinner korunarak yeni pair oluşturuluyor');
               const pair = getRandomPair(photos, [], [...selections, { selectedId: selectedPhoto.id, rejectedId: rejectedPhoto.id }], selectedPhoto);
               if (pair) {
                 setCurrentPair(pair);
               } else {
-                console.log('⚠️ CurrentWinner korunamadı, tamamen yeni pair oluşturuluyor');
                 const newPair = getRandomPair(photos, [], [...selections, { selectedId: selectedPhoto.id, rejectedId: rejectedPhoto.id }]);
                 if (newPair) {
                   setCurrentPair(newPair);
@@ -152,10 +143,8 @@ const PickScreen = ({ navigation, route }) => {
             }
           }
         } catch (error) {
-          console.error('❌ Fresh opponent hatası:', error);
           const newOpponent = getNewOpponent(selectedPhoto, photos, usedOpponentIds);
           if (newOpponent) {
-            console.log(`✅ Hata sonrası fallback opponent: ${newOpponent.name}`);
             if (selectedPhotoIndex === 0) {
               setCurrentPair([selectedPhoto, newOpponent]);
             } else {
@@ -196,7 +185,6 @@ const PickScreen = ({ navigation, route }) => {
     <BlurBackground>
       <SafeAreaView style={styles.safeArea}>
         {isLandscape ? (
-          // Landscape Layout - Full Screen Photos
           <View style={styles.landscapeContainer}>
             <Animated.View
               style={[
@@ -381,6 +369,9 @@ const styles = StyleSheet.create({
   landscapePhotosContainer: {
     flex: 1,
     flexDirection: 'row',
+    paddingVertical: SIZES.marginLg,
+    paddingHorizontal: SIZES.padding,
+    gap: SIZES.margin,
   },
   landscapePhoto: {
     flex: 1,
@@ -403,7 +394,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     justifyContent: 'space-between',
     paddingHorizontal: SIZES.padding,
-    paddingVertical: SIZES.margin,
+    paddingVertical: SIZES.marginLg,
     pointerEvents: 'box-none',
   },
   landscapeHeader: {
@@ -411,6 +402,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: SIZES.margin,
+    paddingTop: SIZES.margin / 2,
+    height: 56,
   },
   landscapeTitle: {
     fontSize: SIZES.large,
@@ -421,23 +414,27 @@ const styles = StyleSheet.create({
     textShadowRadius: 3,
   },
   landscapeCounter: {
-    fontSize: SIZES.base,
+    marginTop: -50,
+    fontSize: SIZES.medium,
+    fontWeight: 'bold',
     color: COLORS.surface,
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 20,
-    textShadowColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: 'rgba(0,0,0,0.8)',
+    width: 60,
+    height: 50,
+    borderRadius: 25,
+    textAlign: 'center',
+    lineHeight: 50,
+    textShadowColor: 'rgba(0,0,0,0.8)',
     textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 3,
+    textShadowRadius: 4,
   },
   landscapeVS: {
     position: 'absolute',
     top: '50%',
     left: '50%',
-    transform: [{ translateX: -30 }, { translateY: -30 }],
     width: 60,
     height: 60,
+    transform: [{ translateX: -10 }, { translateY: 0 }],
     borderRadius: 30,
     backgroundColor: '#1d4ed8',
     justifyContent: 'center',
@@ -454,10 +451,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   landscapeBackButton: {
-    minWidth: 50,
-    height: 40,
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    borderRadius: 20,
+    marginTop: -25,
+    width: 60,
+    height: 50,
+    backgroundColor: 'rgba(0,0,0,0.8)',
+    borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 0,
+    shadowOpacity: 0,
+    elevation: 0,
   },
   backButtonText: {
     fontSize: 24,
