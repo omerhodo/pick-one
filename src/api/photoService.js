@@ -228,7 +228,6 @@ class PhotoService {
               types: detail.types?.map(t => t.type.name) || []
             };
           } catch (error) {
-            console.log(`   Pokemon ${pokemon.name} detayı alınamadı:`, error.message);
             return null;
           }
         })
@@ -280,12 +279,6 @@ class PhotoService {
         throw new Error(`${provider.name} API key bulunamadı`);
       }
 
-      console.log(`🌐 ${provider.name} API çağrısı yapılıyor:`);
-      console.log(`   Category: ${categoryConfig.displayName} (${categoryConfig.key})`);
-      console.log(`   Provider: ${provider.name}`);
-      console.log(`   URL: ${url}`);
-      console.log(`   Params:`, params);
-      console.log(`   Headers:`, headers);
 
       const urlParams = new URLSearchParams({
         page: randomPage.toString(),
@@ -294,7 +287,6 @@ class PhotoService {
       });
 
       const fullUrl = `${url}?${urlParams}`;
-      console.log(`   Full URL: ${fullUrl}`);
 
       const response = await fetch(fullUrl, {
         ...fetchConfig,
@@ -302,12 +294,10 @@ class PhotoService {
       });
 
       if (!response.ok) {
-        console.log(`❌ ${provider.name} API error: ${response.status} - ${response.statusText}`);
         throw new Error(`${provider.name} API error: ${response.status}`);
       }
 
       const data = await response.json();
-      console.log(`✅ ${provider.name} API response alındı. Sonuç sayısı: ${data.results?.length || 0}`);
 
       this.apiError = false;
 
@@ -316,13 +306,10 @@ class PhotoService {
 
         if (categoryConfig.type === 'movie') {
           data.results = data.results.filter(movie => movie.poster_path);
-          console.log(`🎬 Poster fotoğrafı filtrelemesi: ${originalCount} → ${data.results.length}`);
         } else {
           if (provider.name === 'The Movie Database') {
             data.results = data.results.filter(person => person.profile_path);
-            console.log(`📷 Profil fotoğrafı filtrelemesi: ${originalCount} → ${data.results.length}`);
           } else if (provider.name === 'API Ninjas') {
-            console.log(`🥷 API Ninjas verisi filtreleniyor: ${originalCount} → ${data.results.length}`);
           }
         }
 
@@ -330,18 +317,6 @@ class PhotoService {
         data.total_results = data.results.length;
       }
 
-      console.log(`${provider.name} API Response for category=${category}:`, {
-        provider: provider.name,
-        endpoint: url.split('/').pop(),
-        current_page: data.page,
-        total_pages: data.total_pages,
-        total_results: data.total_results,
-        filtered_results: data.results?.length,
-        sample_data: data.results?.slice(0, 3).map(item => ({
-          name: item.name || item.title,
-          type: categoryConfig.type
-        }))
-      });
 
       return {
         success: true,
@@ -494,9 +469,6 @@ class PhotoService {
   async getPhotos(category = null) {
     try {
       if (this.currentCategory !== category) {
-        if (this.celebrities.length > 0) {
-          console.log(`🔄 Category changed from ${this.currentCategory} to ${category}, clearing cache`);
-        }
         this.celebrities = [];
         this.currentPage = 1;
       }
@@ -535,7 +507,6 @@ class PhotoService {
         let filteredItems = transformedItems;
         if (category && category !== 'general' && response.data.results[0]?.source !== 'TEST') {
           const categoryConfig = CategoryAPI.getConfig(category);
-          console.log(`🔍 Kategori filtresi uygulanıyor: ${categoryConfig.displayName} (${category})`);
 
           if (categoryConfig.type === 'movie') {
             filteredItems = transformedItems;
@@ -555,8 +526,6 @@ class PhotoService {
         }
 
         filteredItems = this.shuffleArray(filteredItems);
-        console.log(`🎯 ${filteredItems.length} sonuç karıştırıldı`);
-
         this.celebrities = [...this.celebrities, ...filteredItems];
 
         const finalResult = {
@@ -579,7 +548,6 @@ class PhotoService {
       console.error('GetPhotos Error:', error);
 
       if (!this.useTestData) {
-        console.log('Acil durum: Test verisi kullanılıyor...');
         this.useTestData = true;
         this.apiError = true;
         return await this.getPhotos(category);
@@ -603,12 +571,10 @@ class PhotoService {
         throw new Error('Fotoğraf verisi alınamadı');
       }
 
-      let photos = response.data.filter(photo => !excludeIds.includes(photo.id));
-      console.log(`📊 Toplam ${response.data.length} fotoğraf, ${excludeIds.length} filtrelendi, kalan: ${photos.length}`);
+  let photos = response.data.filter(photo => !excludeIds.includes(photo.id));
 
       let attempts = 0;
       while (photos.length < 2 && attempts < 3) {
-        console.log(`⚠️ Sadece ${photos.length} fotoğraf kaldı, daha fazla veri yükleniyor... (deneme ${attempts + 1})`);
 
         const moreResponse = await this.getPhotos(this.currentCategory, this.currentGender);
         if (moreResponse.success && moreResponse.data.length > 0) {
@@ -618,9 +584,7 @@ class PhotoService {
           const uniqueNewPhotos = newPhotos.filter(photo => !existingIds.includes(photo.id));
 
           photos.push(...uniqueNewPhotos);
-          console.log(`✅ ${uniqueNewPhotos.length} yeni unique fotoğraf eklendi, toplam: ${photos.length}`);
         } else {
-          console.log('❌ Daha fazla veri alınamadı');
           break;
         }
         attempts++;
@@ -639,9 +603,8 @@ class PhotoService {
       const selectedPair = [shuffled[0], shuffled[1]];
 
       if (selectedPair[0].id === selectedPair[1].id) {
-        if (shuffled.length > 2) {
+          if (shuffled.length > 2) {
           selectedPair[1] = shuffled[2];
-          console.log('⚠️ Aynı kişi tespit edildi, 3. kişi seçildi');
         } else {
           console.error('❌ Farklı kişiler seçilemedi');
           return {
@@ -668,8 +631,6 @@ class PhotoService {
 
   async submitSelection(selection) {
     try {
-      console.log('Seçim kaydedildi:', selection);
-
       return {
         success: true,
         data: { message: 'Seçim başarıyla kaydedildi' },
@@ -698,7 +659,6 @@ class PhotoService {
   }
 
   resetGenderFilter() {
-    console.log('🔄 Gender filter resetleniyor... (API isteği yok)');
     this.currentGender = null;
     this.currentCategory = null;
     this.celebrities = [];
@@ -721,12 +681,9 @@ class PhotoService {
 
   async getFreshOpponent(currentWinner, excludeIds = []) {
     try {
-      console.log(`🔄 Fresh opponent araniyor: ${currentWinner?.name} için`);
-
       const response = await this.getPhotos(this.currentCategory, this.currentGender);
 
       if (!response.success || !response.data) {
-        console.log('❌ Fresh data alınamadı');
         return null;
       }
 
@@ -735,15 +692,11 @@ class PhotoService {
         photo => !allExcludeIds.includes(photo.id)
       );
 
-      console.log(`📊 Fresh data: ${response.data.length} total, ${availableOpponents.length} available opponents`);
-
       if (availableOpponents.length === 0) {
-        console.log('❌ Fresh data\'da uygun rakip yok');
         return null;
       }
 
       const randomOpponent = availableOpponents[Math.floor(Math.random() * availableOpponents.length)];
-      console.log(`✅ Fresh opponent bulundu: ${randomOpponent?.name} (ID: ${randomOpponent?.id})`);
 
       return randomOpponent;
 
@@ -753,23 +706,18 @@ class PhotoService {
     }
   }
 
-  // Category filter'ı resetle
   resetCategoryFilter() {
     this.currentCategory = null;
-    console.log('📝 Category filter resetlendi');
   }
 
-  // Ana sayfa için kategori listesi getir
   static getHomepageCategories() {
     return CategoryAPI.getByType('person').concat(CategoryAPI.getByType('movie'));
   }
 
-  // Belirli bir kategorinin konfigürasyonunu getir
   static getCategoryConfig(categoryKey) {
     return CategoryAPI.getConfig(categoryKey);
   }
 
-  // Tüm kategori konfigürasyonlarını getir
   static getAllCategories() {
     return CategoryAPI.getByType('person').concat(CategoryAPI.getByType('movie'));
   }

@@ -79,7 +79,6 @@ export const I18nProvider = ({ children }) => {
       // Update state
       dispatch({ type: ActionTypes.SET_LANGUAGE, payload: newLanguage });
 
-      console.log('Language changed to:', newLanguage);
       return true;
     } catch (error) {
       console.error('Failed to change language:', error);

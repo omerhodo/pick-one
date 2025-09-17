@@ -84,7 +84,7 @@ const PickScreen = ({ navigation, route }) => {
 
   const handlePhotoSelection = (selectedPhoto) => {
     if (isSelecting || !currentPair || isLoadingOpponent) {
-      console.log('⏸️ Seçim engellendi - isSelecting:', isSelecting, 'isLoadingOpponent:', isLoadingOpponent);
+      // Selection blocked due to state
       return;
     }
 
@@ -108,14 +108,14 @@ const PickScreen = ({ navigation, route }) => {
           { selectedId: selectedPhoto.id, rejectedId: rejectedPhoto.id }
         ]);
 
-        console.log('🔄 Fresh opponent deneniyor...');
+  // Trying to find a fresh opponent
         setIsLoadingOpponent(true);
 
         try {
           const freshOpponent = await photoService.getFreshOpponent(selectedPhoto, usedOpponentIds);
 
           if (freshOpponent) {
-            console.log(`✅ Fresh opponent kullaniliyor: ${freshOpponent.name}`);
+            // Using fresh opponent
             if (selectedPhotoIndex === 0) {
               setCurrentPair([selectedPhoto, freshOpponent]);
             } else {

@@ -53,7 +53,7 @@ const HomeScreen = ({ navigation }) => {
 
   useEffect(() => {
     if (!isFirstMount.current && !isCacheClearingRef.current && previousCategory.current !== selectedCategory) {
-      console.log(`🎯 Kategori değişti: ${previousCategory.current} → ${selectedCategory}, cache temizleniyor...`);
+
 
       isCacheClearingRef.current = true;
       clearCache();
@@ -68,7 +68,7 @@ const HomeScreen = ({ navigation }) => {
   useFocusEffect(
     useCallback(() => {
       if (!isFirstMount.current && !isCacheClearingRef.current) {
-        console.log('🏠 HomeScreen\'e geri dönüldü, TÜM CACHE temizleniyor...');
+
 
         isCacheClearingRef.current = true;
         clearCache();

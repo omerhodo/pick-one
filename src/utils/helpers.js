@@ -5,12 +5,12 @@
  * keepWinner: true ise, currentWinner korunur ve sadece yeni rakip seçilir
  */
 export const getRandomPair = (photos, excludeIds = [], selections = [], currentWinner = null) => {
-  console.log(`🎯 getRandomPair: ${photos.length} fotoğraf, excludeIds=${excludeIds.length}, currentWinner=${currentWinner?.name}`);
+  // getRandomPair invoked
 
   const availablePhotos = photos.filter(photo => !excludeIds.includes(photo.id));
 
   if (availablePhotos.length < 2) {
-    console.log('❌ Yeterli fotoğraf yok:', availablePhotos.length);
+    // Not enough photos
     return null; // Yeterli fotoğraf yok
   }
 
@@ -18,12 +18,12 @@ export const getRandomPair = (photos, excludeIds = [], selections = [], currentW
     const availableOpponents = availablePhotos.filter(photo => photo.id !== currentWinner.id);
 
     if (availableOpponents.length === 0) {
-      console.log('❌ CurrentWinner için rakip bulunamadı');
+      // No opponent for current winner
       return null;
     }
 
     const randomOpponent = availableOpponents[Math.floor(Math.random() * availableOpponents.length)];
-    console.log(`✅ CurrentWinner korundu: ${currentWinner.name} vs ${randomOpponent.name}`);
+  // CurrentWinner preserved with a new opponent
 
     return [currentWinner, randomOpponent];
   }
@@ -56,24 +56,21 @@ export const getRandomPair = (photos, excludeIds = [], selections = [], currentW
   const remainingPhotos = weightedPhotos.filter(p => p.id !== firstPhoto.id);
   const secondPhoto = selectWeightedRandom(remainingPhotos);
 
-  console.log(`✅ İki yeni fotoğraf seçildi: ${firstPhoto.name} vs ${secondPhoto.name}`);
+  // Two new photos selected
 
   return [firstPhoto, secondPhoto];
 };
 
 export const getNewOpponent = (winner, photos, usedOpponentIds = []) => {
-  console.log(`🎯 getNewOpponent: Winner=${winner?.name} (ID: ${winner?.id})`);
-  console.log(`📊 Kullanılan rakip ID'ler:`, usedOpponentIds);
-  console.log(`📊 Toplam ${photos.length} fotoğraf mevcut`);
+  // getNewOpponent invoked
 
   const availableOpponents = photos.filter(
     photo => photo.id !== winner.id && !usedOpponentIds.includes(photo.id)
   );
 
-  console.log(`✅ ${availableOpponents.length} uygun rakip bulundu`);
 
   if (availableOpponents.length === 0) {
-    console.log('❌ Tüm rakipler tükendi, yeni veri gerekli');
+    // All opponents exhausted
     return null; // Tüm rakipler tükendi
   }
 
@@ -81,7 +78,7 @@ export const getNewOpponent = (winner, photos, usedOpponentIds = []) => {
   const randomIndex = Math.floor(Math.random() * availableOpponents.length);
   const selectedOpponent = availableOpponents[randomIndex];
 
-  console.log(`🎲 Yeni rakip seçildi: ${selectedOpponent?.name} (ID: ${selectedOpponent?.id})`);
+  // New opponent selected
 
   return selectedOpponent;
 };

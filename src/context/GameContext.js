@@ -271,14 +271,12 @@ export const GameProvider = ({ children }) => {
   };
 
   const clearCache = () => {
-    console.log('🧹 Photo cache + GameContext photos temizleniyor...');
     try {
       photoService.clearPhotoCache();
-      console.log('✅ PhotoService cache temizlendi');
+
 
       if (dispatch) {
         dispatch({ type: ActionTypes.CLEAR_PHOTOS });
-        console.log('✅ GameContext photos temizlendi');
       } else {
         console.warn('⚠️ dispatch fonksiyonu bulunamadı');
       }
@@ -288,7 +286,6 @@ export const GameProvider = ({ children }) => {
   };
 
   const resetCategoryFilter = () => {
-    console.log('🔄 Category filter resetleniyor... (API isteği yok)');
     photoService.resetCategoryFilter();
   };
 
