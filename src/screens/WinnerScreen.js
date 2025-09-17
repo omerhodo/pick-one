@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Animated, StyleSheet, Text, View } from 'react-native';
+import { Animated, Dimensions, StyleSheet, Text, View } from 'react-native';
 import ConfettiCannon from 'react-native-confetti-cannon';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '../components/Button';
@@ -12,6 +12,15 @@ const WinnerScreen = ({ navigation, route }) => {
   const { t } = useTranslation();
   const scaleAnim = useRef(new Animated.Value(0.5)).current;
   const [showConfetti, setShowConfetti] = useState(false);
+  const [screenData, setScreenData] = useState(Dimensions.get('window'));
+
+  useEffect(() => {
+    const onChange = ({ window }) => setScreenData(window);
+    const sub = Dimensions.addEventListener?.('change', onChange) || Dimensions.addEventListener('change', onChange);
+    return () => sub?.remove?.();
+  }, []);
+
+  const isLandscape = screenData.width > screenData.height;
 
   useEffect(() => {
     Animated.spring(scaleAnim, {
@@ -54,23 +63,29 @@ const WinnerScreen = ({ navigation, route }) => {
           <Animated.View
             style={[
               styles.winnerContainer,
+              isLandscape && styles.winnerContainerLandscape,
               { transform: [{ scale: scaleAnim }] }
             ]}
           >
             <PhotoCard
               photo={winner}
-              style={styles.winnerPhoto}
+              style={[styles.winnerPhoto, isLandscape && styles.winnerPhotoLandscape]}
               showName={false}
             />
-            <Text style={styles.winnerName}>{winner.name}</Text>
-          </Animated.View>
 
-          <Button
-            title={t('winner.playAgain')}
-            onPress={handleBackHome}
-            size="large"
-            style={styles.button}
-          />
+            <View style={[styles.winnerMeta, isLandscape && styles.winnerMetaLandscape]}>
+              <Text style={[styles.winnerName, isLandscape && styles.winnerNameLandscape]} numberOfLines={2}>
+                {winner.name}
+              </Text>
+
+              <Button
+                title={t('winner.playAgain')}
+                onPress={handleBackHome}
+                size="large"
+                style={[styles.button, isLandscape && styles.buttonLandscape]}
+              />
+            </View>
+          </Animated.View>
         </View>
       </SafeAreaView>
     </View>
@@ -159,10 +174,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: SIZES.margin * 4,
   },
+  winnerContainerLandscape: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: SIZES.margin * 2,
+  },
   winnerPhoto: {
     width: 250,
     height: 250,
     marginBottom: SIZES.margin,
+  },
+  winnerPhotoLandscape: {
+    width: 180,
+    height: 180,
+    marginBottom: 0,
+  },
+  winnerMeta: {
+    alignItems: 'center',
+  },
+  winnerMetaLandscape: {
+    marginLeft: SIZES.padding,
+    alignItems: 'flex-start',
   },
   winnerName: {
     fontSize: SIZES.xl,
@@ -170,9 +203,18 @@ const styles = StyleSheet.create({
     color: COLORS.surface,
     textAlign: 'center',
   },
+  winnerNameLandscape: {
+    fontSize: SIZES.large,
+    textAlign: 'left',
+  },
   button: {
-    width: '80%',
+    width: 200,
+    marginTop: SIZES.margin * 2,
     alignSelf: 'center',
+  },
+  buttonLandscape: {
+    width: 160,
+    alignSelf: 'flex-start',
   },
 });
 
