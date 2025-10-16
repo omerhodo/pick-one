@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ApiWarning from '../components/ApiWarning';
+import BannerAdBottom from '../components/BannerAdBottom';
 import BlurBackground from '../components/BlurBackground';
 import Button from '../components/Button';
 import LanguageSelector from '../components/LanguageSelector';
@@ -154,6 +155,7 @@ const HomeScreen = ({ navigation }) => {
           usingTestData={usingTestData}
           onDismiss={dismissApiWarning}
         />
+        <BannerAdBottom />
       </SafeAreaView>
     </BlurBackground>
   );

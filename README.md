@@ -157,3 +157,73 @@ yarn build:android
 
 - **Geliştirici**: [Ömer Hodo]
 - **Tasarım**: [Ömer Hodo]
+
+## 📣 AdMob Kurulumu
+
+Bu proje `expo-ads-admob` ile banner reklamları gösterir. Aşağıdaki adımları izleyin:
+
+1. Google AdMob hesabı açın ve uygulamanızı ekleyin.
+2. App ID alın (örnek: `ca-app-pub-xxxxxxxx~yyyyyyyyyy`) ve Banner Ad Unit ID'lerini oluşturun (Android ve iOS için ayrı olabilir).
+3. Lokal geliştirme için `.env.example` dosyasını kopyalayın ve `.env` içinde değerleri güncelleyin:
+
+```bash
+cp .env.example .env
+# .env içindeki ADMOB_* değişkenlerini kendi değerlerinizle değiştirin
+```
+
+4. Uygulamayı başlatın ve emulator / cihazda test edin:
+
+```bash
+yarn start
+yarn android   # veya
+yarn ios
+```
+
+5. Home ve Pick ekranlarının alt kısmında banner reklamlar otomatik olarak görüntülenecektir. Eğer `.env` içinde ID yoksa kod Google'ın test banner ID'sine döner.
+
+Notlar:
+- `.env` dosyası `.gitignore` içinde listelenmiştir; gerçek anahtarları repoya eklemeyin.
+- Geliştirme sırasında Google'ın test reklam birimlerini kullanın.
+- Gerçek reklam birimlerine geçişte AdMob politikalarına uyduğunuzdan emin olun.
+
+### Hata ayıklama: "runtime not ready" / undefined değer hataları
+
+Eğer Android'de veya iOS'ta "not ready" veya `undefined` değer hatası alıyorsanız, yaygın sebepler ve çözümleri:
+
+- Expo Go sınırlamaları: `expo-ads-admob` bazı durumlarda doğrudan Expo Go içinde tam çalışmayabilir. Reklam SDK'sı native modüller gerektirdiği için gerçek test adlarını görmek veya SDK'yı düzgün başlatmak için ya bir custom dev client (expo-dev-client) ya da standalone build (EAS build / `expo run:android`) kullanmanız gerekebilir.
+
+- App ID manifest eksikliği: Android için App ID'nin `app.config.js` içinde `android.config.googleMobileAdsAppId` olarak veya iOS için `ios.infoPlist.GADApplicationIdentifier` olarak ayarlı olması gerekir. Bu repo için Android App ID `app.config.js` içinde eklidir. (iOS gerekiyorsa ekleyebilirim.)
+
+- `Constants.manifest` boş/undefined olabilir: runtime'da `Constants.manifest.extra` null dönebilir; component buna karşı korunmuştur ama config yoksa banner test ID'sine düşer.
+
+Nasıl ayrıntılı log alırsınız (Android):
+
+1. Metro'yu başlatın:
+```bash
+yarn start --clear
+```
+2. Android'i çalıştırın:
+```bash
+yarn android
+```
+3. Hatanın terminaldeki stack trace'ini kopyalayın. Eğer `yarn android` doğrudan crash oluyorsa, ayrıntılı Android log almak için bir terminalde aşağıyı çalıştırın (adb kurulu olmalı):
+```bash
+adb logcat *:S ReactNative:V ReactNativeJS:V
+```
+
+Alternatif: Expo dev client ile test etmek için:
+```bash
+npx expo prebuild --no-install
+npx expo run:android
+```
+veya EAS geliştirme/prod build:
+```bash
+npx eas build --platform android --profile development
+```
+
+Paylaşmanız gerekenler (hızlıca bakmam için):
+- Terminalde `yarn android` çalıştırırken çıkan hata stack trace'i
+- Eğer varsa `adb logcat` çıktısından ilgili hata satırları
+
+Ben projede `BannerAdBottom` bileşenini hataya dayanıklı hale getirdim (manifest olmaması veya `AdMobBanner` unavailability durumunda çökme engellendi). Ancak gerçek reklam SDK initialization sorunları için yukarıdaki loglar gerekli.
+

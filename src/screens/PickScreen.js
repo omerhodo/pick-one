@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Animated, Dimensions, Platform, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import photoService from '../api/photoService';
+import BannerAdBottom from '../components/BannerAdBottom';
 import BlurBackground from '../components/BlurBackground';
 import Button from '../components/Button';
 import Loader from '../components/Loader';
@@ -278,6 +279,7 @@ const PickScreen = ({ navigation, route }) => {
           </View>
         )}
       </SafeAreaView>
+      <BannerAdBottom />
     </BlurBackground>
   );
 };
