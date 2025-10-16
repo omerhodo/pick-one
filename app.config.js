@@ -4,7 +4,7 @@ export default {
   "expo": {
     "name": "Seç Birini",
     "slug": "pick-one",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -17,7 +17,8 @@ export default {
       "tmdbApiKey": process.env.TMDB_API_KEY,
       "admobAndroidAppId": process.env.ADMOB_APP_ID_ANDROID,
       "admobBannerAndroid": process.env.ADMOB_BANNER_ID_ANDROID,
-      "admobBannerIos": process.env.ADMOB_BANNER_ID_IOS
+      "admobBannerIos": process.env.ADMOB_BANNER_ID_IOS,
+      "disableAds": process.env.DISABLE_ADS === 'true'
     },
     "plugins": [
       [
@@ -36,7 +37,7 @@ export default {
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.omerhodo.pickone",
-      "buildNumber": "1",
+      "buildNumber": "2",
       "config": {
         "googleMobileAdsAppId": process.env.ADMOB_APP_ID_IOS
       }
@@ -47,7 +48,7 @@ export default {
         "backgroundColor": "#1d4ed8"
       },
       "package": "com.omerhodo.pickone",
-      "versionCode": 1,
+      "versionCode": 2,
       "config": {
         "googleMobileAdsAppId": process.env.ADMOB_APP_ID_ANDROID
       },

@@ -3,6 +3,14 @@ import { Platform, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const BannerAdBottom = ({ style }) => {
+  // Check if ads are disabled via environment variable
+  const manifest = Constants.expoConfig || Constants.manifest || {};
+  const adsDisabled = manifest?.extra?.disableAds || process.env.DISABLE_ADS === 'true';
+
+  if (adsDisabled) {
+    return null;
+  }
+
   // Check if we're running in Expo Go
   const isExpoGo = Constants.appOwnership === 'expo';
 
@@ -24,8 +32,7 @@ const BannerAdBottom = ({ style }) => {
     return null;
   }
 
-  // Expo exposes config under expoConfig or manifest
-  const manifest = Constants.expoConfig || Constants.manifest || {};
+  // Get AdMob IDs from manifest
   const admobAndroid = manifest?.extra?.admobBannerAndroid || process.env.ADMOB_BANNER_ID_ANDROID;
   const admobIos = manifest?.extra?.admobBannerIos || process.env.ADMOB_BANNER_ID_IOS;
 

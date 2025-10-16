@@ -50,6 +50,11 @@ if [ -f .env ]; then
     BANNER_IOS=$(grep ADMOB_BANNER_ID_IOS .env | cut -d '=' -f2)
     eas secret:create --scope project --name ADMOB_BANNER_ID_IOS --value "$BANNER_IOS" --type string --force
 
+    # Disable Ads Flag
+    echo "📌 DISABLE_ADS ekleniyor..."
+    DISABLE_ADS=$(grep DISABLE_ADS .env | cut -d '=' -f2)
+    eas secret:create --scope project --name DISABLE_ADS --value "$DISABLE_ADS" --type string --force
+
     echo ""
     echo "✅ Tüm secrets başarıyla eklendi!"
 else
