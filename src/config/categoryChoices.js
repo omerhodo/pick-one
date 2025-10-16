@@ -2,7 +2,7 @@ import config from './env';
 
 /**
  * Multi-API Kategori Konfigürasyonu
- * Farklı API sağlayıcılarını destekler: TMDB, API Ninjas, Custom APIs
+ * Farklı API sağlayıcılarını destekler: TMDB, Custom APIs
  * Compact ve esnek yapı ile tüm kategori bilgilerini yönetir
  */
 
@@ -16,13 +16,6 @@ export const API_PROVIDERS = {
     headers: {},
     auth: 'query', // 'query' | 'header' | 'bearer'
     keyParam: 'api_key'
-  },
-  NINJAS: {
-    name: 'API Ninjas',
-    baseURL: 'https://api.api-ninjas.com/v1',
-    apiKey: config.API_NINJAS_KEY,
-    headers: { 'X-Api-Key': config.API_NINJAS_KEY },
-    auth: 'header'
   },
   POKEAPI: {
     name: 'PokeAPI',
@@ -50,7 +43,6 @@ export const CATEGORIES = {
   MALE: [2, 'Aktörler', 'Aktör', '👨‍🎭', '#4DABF7', 'person', 'TMDB', '/discover/person', { with_gender: 2, sort_by: 'popularity.desc' }],
   MOVIES: ['movies', 'Filmler', 'Film', '🎬', '#FF8787', 'movie', 'TMDB', '/movie/popular', { sort_by: 'popularity.desc' }],
   POKEMON: ['pokemon', 'Pokemonlar', 'Pokemon', '⚡', '#FFCB05', 'pokemon', 'POKEAPI', '/pokemon', { limit: 20, offset: 0 }],
-  CELEBRITIES_NINJAS: ['celebrities', 'Ünlü Kişiler', 'Ünlü', '🌟', '#FFA502', 'person', 'NINJAS', '/celebrity', { category: 'actor' }],
   DEFAULT: ['default', 'Tüm Ünlüler', 'Tümü', '⭐', '#FFA502', 'person', 'TMDB', '/person/popular', {}]
 };
 

@@ -274,8 +274,7 @@ class PhotoService {
       const headers = CategoryAPI.getHeaders(category);
       const fetchConfig = CategoryAPI.getFetchConfig(category);
 
-      if ((provider.name === 'The Movie Database' && (!config.TMDB_API_KEY || config.TMDB_API_KEY === 'demo_key')) ||
-          (provider.name === 'API Ninjas' && (!config.API_NINJAS_KEY || config.API_NINJAS_KEY === 'demo_key'))) {
+      if ((provider.name === 'The Movie Database' && (!config.TMDB_API_KEY || config.TMDB_API_KEY === 'demo_key'))){
         throw new Error(`${provider.name} API key bulunamadı`);
       }
 
@@ -309,7 +308,6 @@ class PhotoService {
         } else {
           if (provider.name === 'The Movie Database') {
             data.results = data.results.filter(person => person.profile_path);
-          } else if (provider.name === 'API Ninjas') {
           }
         }
 
