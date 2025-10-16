@@ -9,6 +9,16 @@ export default {
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
+    "owner": "omerhodo",
+    "extra": {
+      "eas": {
+        "projectId": "6d7febf5-9d01-4d25-91bf-c36b089710f1"
+      },
+      "tmdbApiKey": process.env.TMDB_API_KEY,
+      "admobAndroidAppId": process.env.ADMOB_APP_ID_ANDROID,
+      "admobBannerAndroid": process.env.ADMOB_BANNER_ID_ANDROID,
+      "admobBannerIos": process.env.ADMOB_BANNER_ID_IOS
+    },
     "plugins": [
       [
         "react-native-google-mobile-ads",
@@ -26,6 +36,7 @@ export default {
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.omerhodo.pickone",
+      "buildNumber": "1",
       "config": {
         "googleMobileAdsAppId": process.env.ADMOB_APP_ID_IOS
       }
@@ -36,6 +47,7 @@ export default {
         "backgroundColor": "#1d4ed8"
       },
       "package": "com.omerhodo.pickone",
+      "versionCode": 1,
       "config": {
         "googleMobileAdsAppId": process.env.ADMOB_APP_ID_ANDROID
       },
@@ -43,12 +55,6 @@ export default {
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "tmdbApiKey": process.env.TMDB_API_KEY,
-      "admobAndroidAppId": process.env.ADMOB_APP_ID_ANDROID,
-      "admobBannerAndroid": process.env.ADMOB_BANNER_ID_ANDROID,
-      "admobBannerIos": process.env.ADMOB_BANNER_ID_IOS
     }
   }
 };

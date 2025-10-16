@@ -1,33 +1,43 @@
 # Seç Birini 🎭
 
-İki ünlü arasından birini seçip, tercihlerini keşfettiğin eğlenceli mobil uygulama!
+İki fotoğraf arasından birini seçip, gerçek favorini keşfet! 🎯
+
+[![iOS](https://img.shields.io/badge/iOS-App%20Store-blue)](https://appstoreconnect.apple.com)
+[![Android](https://img.shields.io/badge/Android-Play%20Store-green)](https://play.google.com/console)
+[![Expo](https://img.shields.io/badge/Expo-SDK%2054-lightgrey)](https://expo.dev)
+[![React Native](https://img.shields.io/badge/React%20Native-0.81-blue)](https://reactnative.dev)
 
 ## 📱 Uygulama Hakkında
 
-"Seç Birini", kullanıcılara sürekli olarak iki ünlü fotoğrafı arasından seçim yaptırarak tercihlerini analiz eden, eğlenceli ve bağımlılık yapan bir mobil uygulamadır. TMDB (The Movie Database) API'sinden gerçek ünlü verileri çekerek otantik bir deneyim sunar.
+"Seç Birini", kullanıcılara sürekli olarak iki fotoğraf arasından seçim yaptırarak gerçek tercihlerini keşfettiren, eğlenceli ve bağımlılık yapan bir mobil uygulamadır. TMDB (The Movie Database) API'sinden gerçek verileri çekerek otantik bir deneyim sunar.
 
 ### ✨ Özellikler
 
-- **TMDB Entegrasyonu**: Gerçek ünlü verileri ve yüksek kaliteli fotoğraflar
-- **Turnuva Sistemi**: 10 seçim ile kazanan belirleme
-- **Modern UI**: Blur arka plan ve gradient tasarım
-- **Yükleme Durumları**: Kullanıcı dostu loading animasyonları
-- **Fallback Sistem**: API hatalarında alternatif veri kaynakları
-- **İstatistik Takibi**: Hangi ünlüleri ne sıklıkta seçtiğini gör
+- **🎬 Çeşitli Kategoriler**: Erkek/Kadın Aktörler, Sporcular, Müzisyenler
+- **🎯 Esnek Seçenekler**: 10, 15 veya 20 fotoğraf arasından seçim
+- **🌍 Çift Dil Desteği**: Türkçe ve İngilizce
+- **🖼️ Kaliteli Görseller**: TMDB API'den yüksek çözünürlüklü fotoğraflar
+- **⚡ Hızlı ve Akıcı**: Optimize edilmiş performans
+- **📱 Modern UI**: Blur arka plan, gradient ve animasyonlar
+- **🎉 Confetti Animasyonu**: Kazanan ekranında şölen!
+- **📊 AdMob Entegrasyonu**: Banner reklamlar ile monetizasyon
+- **🔄 Fallback Sistem**: İnternet yoksa demo mode
+- **💾 Offline Cache**: AsyncStorage ile veri saklama
 
 ### 🎯 Nasıl Çalışır?
 
-1. **TMDB API**: Popüler ünlüleri ve fotoğraflarını çeker
-2. **Seçim Ekranı**: İki ünlü arasından birini seç
-3. **Turnuva**: Seçilen ünlü bir sonraki turda kalır
-4. **Kazanan**: 10 seçim sonunda şampiyon belirlenir
+1. **Kategori Seç**: Aktörler, sporcular veya müzisyenler
+2. **Sayı Belirle**: 10, 15 veya 20 seçim
+3. **İki Fotoğraf**: Aralarından birini seç
+4. **Turnuva Sistemi**: Kazanan bir sonraki turda kalır
+5. **Şampiyon**: En sonunda gerçek favorin ortaya çıkar! 🏆
 
 ## 🔑 Kurulum ve API Setup
 
 ### Gereksinimler
 - Node.js (>= 14.0.0)
 - Expo CLI
-- TMDB API Key (ücretsiz)
+- TMDB API Key
 
 ### 1. Projeyi Klonla
 ```bash
@@ -41,12 +51,27 @@ yarn install
 cp .env.example .env
 ```
 
-### 3. TMDB API Key Al
+### 3. API Keys'leri Al
+
+#### TMDB API
 1. [TMDB](https://www.themoviedb.org/) hesabı oluştur
 2. **Settings > API** sayfasından API key al
-3. `.env` dosyasına ekle:
+
+#### AdMob (Opsiyonel - Reklamlar için)
+1. [AdMob](https://apps.admob.com/) hesabı oluştur
+2. Yeni uygulama oluştur
+3. Banner Ad Unit'leri oluştur (iOS ve Android için ayrı)
+
+### 4. .env Dosyasını Doldur
 ```bash
-TMDB_API_KEY=your_actual_api_key_here
+# TMDB API
+TMDB_API_KEY=your_tmdb_api_key_here
+
+# AdMob (Opsiyonel)
+ADMOB_APP_ID_ANDROID=ca-app-pub-xxxxxxxxxx~yyyyyyyyyy
+ADMOB_APP_ID_IOS=ca-app-pub-xxxxxxxxxx~yyyyyyyyyy
+ADMOB_BANNER_ID_ANDROID=ca-app-pub-xxxxxxxxxx/yyyyyyyyyy
+ADMOB_BANNER_ID_IOS=ca-app-pub-xxxxxxxxxx/yyyyyyyyyy
 ```
 
 ### 4. Uygulamayı Çalıştır
@@ -121,7 +146,52 @@ yarn start
 - Android: `a` tuşuna bas
 - Web: `w` tuşuna bas
 
+## 📱 Deployment
+
+### 🚀 Hızlı Başlangıç
+
+Uygulamamızı yayınlamak için adım adım kılavuz: **[DEPLOYMENT-GUIDE.md](./DEPLOYMENT-GUIDE.md)**
+
+#### Hızlı Komutlar
+
+```bash
+# EAS Setup (ilk kez)
+./scripts/setup-eas.sh
+
+# iOS Build
+./scripts/build-ios.sh
+
+# Android Build
+./scripts/build-android.sh
+
+# Her iki platform
+./scripts/build-all.sh
+```
+
+### 📦 Build Gereksinimleri
+
+- **Apple Developer Account** ($99/yıl) - iOS için
+- **Google Play Console Account** ($25 tek seferlik) - Android için
+- **Expo Account** (ücretsiz) - EAS Build için
+
+### 🔐 Environment Variables (Production)
+
+Production build'leri için EAS secrets kullanın:
+
+```bash
+eas secret:create --name TMDB_API_KEY --value "your-key"
+eas secret:create --name ADMOB_APP_ID_ANDROID --value "your-id"
+eas secret:create --name ADMOB_APP_ID_IOS --value "your-id"
+# ... diğer secrets
+```
+
+Detaylar için: [DEPLOYMENT-GUIDE.md](./DEPLOYMENT-GUIDE.md)
+
 ## 📱 Platform Desteği
+
+- ✅ **iOS**: iPhone ve iPad (iOS 13.0+)
+- ✅ **Android**: Phone ve Tablet (Android 6.0+)
+- ⏳ **Web**: Yakında (temel destek mevcut)
 
 - ✅ **iOS**: iPhone ve iPad
 - ✅ **Android**: Tüm Android cihazlar
@@ -141,89 +211,63 @@ yarn start
 - **Alt başlıklar**: System Medium
 - **Metin**: System Regular
 
-## 🚀 Deployment
+## � Dökümanlar
 
-### iOS
-```bash
-yarn build:ios
-```
+- 📖 **[Deployment Rehberi](./DEPLOYMENT-GUIDE.md)**: App Store ve Play Store'da yayınlama kılavuzu
+- 🎨 **[Store Assets](./store-assets/README.md)**: Ekran görüntüleri ve store materyalleri
+- 📝 **[TMDB Entegrasyonu](./TMDB-INTEGRATION.md)**: API kullanım detayları
 
-### Android
-```bash
-yarn build:android
-```
+## 🧪 Test
 
-## 👥 Ekip
-
-- **Geliştirici**: [Ömer Hodo]
-- **Tasarım**: [Ömer Hodo]
-
-## 📣 AdMob Kurulumu
-
-Bu proje `expo-ads-admob` ile banner reklamları gösterir. Aşağıdaki adımları izleyin:
-
-1. Google AdMob hesabı açın ve uygulamanızı ekleyin.
-2. App ID alın (örnek: `ca-app-pub-xxxxxxxx~yyyyyyyyyy`) ve Banner Ad Unit ID'lerini oluşturun (Android ve iOS için ayrı olabilir).
-3. Lokal geliştirme için `.env.example` dosyasını kopyalayın ve `.env` içinde değerleri güncelleyin:
+### Development Build ile Test
 
 ```bash
-cp .env.example .env
-# .env içindeki ADMOB_* değişkenlerini kendi değerlerinizle değiştirin
-```
+# iOS
+npx expo run:ios
 
-4. Uygulamayı başlatın ve emulator / cihazda test edin:
-
-```bash
-yarn start
-yarn android   # veya
-yarn ios
-```
-
-5. Home ve Pick ekranlarının alt kısmında banner reklamlar otomatik olarak görüntülenecektir. Eğer `.env` içinde ID yoksa kod Google'ın test banner ID'sine döner.
-
-Notlar:
-- `.env` dosyası `.gitignore` içinde listelenmiştir; gerçek anahtarları repoya eklemeyin.
-- Geliştirme sırasında Google'ın test reklam birimlerini kullanın.
-- Gerçek reklam birimlerine geçişte AdMob politikalarına uyduğunuzdan emin olun.
-
-### Hata ayıklama: "runtime not ready" / undefined değer hataları
-
-Eğer Android'de veya iOS'ta "not ready" veya `undefined` değer hatası alıyorsanız, yaygın sebepler ve çözümleri:
-
-- Expo Go sınırlamaları: `expo-ads-admob` bazı durumlarda doğrudan Expo Go içinde tam çalışmayabilir. Reklam SDK'sı native modüller gerektirdiği için gerçek test adlarını görmek veya SDK'yı düzgün başlatmak için ya bir custom dev client (expo-dev-client) ya da standalone build (EAS build / `expo run:android`) kullanmanız gerekebilir.
-
-- App ID manifest eksikliği: Android için App ID'nin `app.config.js` içinde `android.config.googleMobileAdsAppId` olarak veya iOS için `ios.infoPlist.GADApplicationIdentifier` olarak ayarlı olması gerekir. Bu repo için Android App ID `app.config.js` içinde eklidir. (iOS gerekiyorsa ekleyebilirim.)
-
-- `Constants.manifest` boş/undefined olabilir: runtime'da `Constants.manifest.extra` null dönebilir; component buna karşı korunmuştur ama config yoksa banner test ID'sine düşer.
-
-Nasıl ayrıntılı log alırsınız (Android):
-
-1. Metro'yu başlatın:
-```bash
-yarn start --clear
-```
-2. Android'i çalıştırın:
-```bash
-yarn android
-```
-3. Hatanın terminaldeki stack trace'ini kopyalayın. Eğer `yarn android` doğrudan crash oluyorsa, ayrıntılı Android log almak için bir terminalde aşağıyı çalıştırın (adb kurulu olmalı):
-```bash
-adb logcat *:S ReactNative:V ReactNativeJS:V
-```
-
-Alternatif: Expo dev client ile test etmek için:
-```bash
-npx expo prebuild --no-install
+# Android
 npx expo run:android
 ```
-veya EAS geliştirme/prod build:
+
+**Not**: Google Mobile Ads native bir modül olduğu için Expo Go'da çalışmaz. Development build kullanmalısınız.
+
+### Expo Go ile Test (Reklamlar Olmadan)
+
 ```bash
-npx eas build --platform android --profile development
+npx expo start
+# QR kodu tarayın
 ```
 
-Paylaşmanız gerekenler (hızlıca bakmam için):
-- Terminalde `yarn android` çalıştırırken çıkan hata stack trace'i
-- Eğer varsa `adb logcat` çıktısından ilgili hata satırları
+## 🤝 Katkıda Bulunma
 
-Ben projede `BannerAdBottom` bileşenini hataya dayanıklı hale getirdim (manifest olmaması veya `AdMobBanner` unavailability durumunda çökme engellendi). Ancak gerçek reklam SDK initialization sorunları için yukarıdaki loglar gerekli.
+1. Fork edin
+2. Feature branch oluşturun (`git checkout -b feature/amazing-feature`)
+3. Commit edin (`git commit -m 'feat: Add amazing feature'`)
+4. Push edin (`git push origin feature/amazing-feature`)
+5. Pull Request açın
 
+## 📝 Lisans
+
+Bu proje [MIT Lisansı](./LICENSE) altında lisanslanmıştır.
+
+## 👥 Geliştirici
+
+- **Geliştirici**: Ömer Hodo
+- **GitHub**: [@omerhodo](https://github.com/omerhodo)
+
+## 📞 İletişim
+
+- **Email**: omerhodo@gmail.com
+- **Website**: https://xhodo.com
+
+## 🔗 Linkler
+
+- **App Store**: Yakında
+- **Play Store**: Yakında
+- **Demo Video**: Yakında
+
+---
+
+⭐ Projeyi beğendiyseniz yıldız vermeyi unutmayın!
+- Geliştirme sırasında Google'ın test reklam birimlerini kullanın.
+- Gerçek reklam birimlerine geçişte AdMob politikalarına uyduğunuzdan emin olun.
