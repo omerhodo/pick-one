@@ -48,13 +48,24 @@ const PhotoCard = ({ photo, onPress, style, showName = true, showDetails = false
         {loading && renderLoadingIndicator()}
 
         {photo.image && !error ? (
-          <Image
-            source={{ uri: photo.image }}
-            style={[styles.image, loading && styles.hidden]}
-            resizeMode="cover"
-            onLoad={handleImageLoad}
-            onError={handleImageError}
-          />
+          <>
+            {/* Blurred background image */}
+            <Image
+              source={{ uri: photo.image }}
+              style={styles.backgroundImage}
+              resizeMode="cover"
+              blurRadius={20}
+            />
+
+            {/* Main image */}
+            <Image
+              source={{ uri: photo.image }}
+              style={[styles.image, loading && styles.hidden]}
+              resizeMode="contain"
+              onLoad={handleImageLoad}
+              onError={handleImageError}
+            />
+          </>
         ) : (
           !loading && renderPlaceholder()
         )}
@@ -123,9 +134,16 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     position: 'relative',
   },
+  backgroundImage: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    opacity: 0.7,
+  },
   image: {
     width: '100%',
     height: '100%',
+    zIndex: 1,
   },
   hidden: {
     opacity: 0,
@@ -156,6 +174,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: SIZES.margin,
     paddingVertical: 10,
+    zIndex: 2,
   },
   name: {
     color: COLORS.surface,
