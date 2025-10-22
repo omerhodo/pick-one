@@ -4,7 +4,7 @@ export default {
   "expo": {
     "name": "Seç Birini",
     "slug": "pick-one",
-    "version": "1.2.4",
+    "version": "1.2.5",
     "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -28,7 +28,7 @@ export default {
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.omerhodo.pickone",
-      "buildNumber": "8"
+      "buildNumber": "9"
     },
     "android": {
       "adaptiveIcon": {
@@ -36,7 +36,7 @@ export default {
         "backgroundColor": "#1d4ed8"
       },
       "package": "com.omerhodo.pickone",
-      "versionCode": 8,
+      "versionCode": 9,
       "edgeToEdgeEnabled": true
     },
     "web": {

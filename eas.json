@@ -26,9 +26,9 @@
   "submit": {
     "production": {
       "ios": {
-        "appleId": "omerhodo@gmail.com",
-        "ascAppId": "placeholder",
-        "appleTeamId": "placeholder"
+        "appleId": "${APPLE_ID}",
+        "ascAppId": "${ASC_APP_ID}",
+        "appleTeamId": "${APPLE_TEAM_ID}"
       },
       "android": {
         "serviceAccountKeyPath": "./google-service-account.json"
