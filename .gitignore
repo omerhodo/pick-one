@@ -114,3 +114,6 @@ buck-out/
 
 # Android local SDK path (machine-specific)
 android/local.properties
+
+# Documentation
+/docs
