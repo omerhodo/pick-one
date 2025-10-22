@@ -42,7 +42,7 @@ export const CATEGORIES = {
   FEMALE: [1, 'Aktiristler', 'Aktirist', '👩‍🎭', '#FF6B9D', 'person', 'TMDB', '/discover/person', { with_gender: 1, sort_by: 'popularity.desc' }],
   MALE: [2, 'Aktörler', 'Aktör', '👨‍🎭', '#4DABF7', 'person', 'TMDB', '/discover/person', { with_gender: 2, sort_by: 'popularity.desc' }],
   MOVIES: ['movies', 'Filmler', 'Film', '🎬', '#FF8787', 'movie', 'TMDB', '/movie/popular', { sort_by: 'popularity.desc' }],
-  POKEMON: ['pokemon', 'Pokemonlar', 'Pokemon', '⚡', '#FFCB05', 'pokemon', 'POKEAPI', '/pokemon', { limit: 20, offset: 0 }],
+  POKEMON: ['pokemon', 'Pokemonlar', 'Pokemon', '⚡', '#FFCB05', 'pokemon', 'POKEAPI', '/pokemon', { limit: 100, offset: 0 }],
   DEFAULT: ['default', 'Tüm Ünlüler', 'Tümü', '⭐', '#FFA502', 'person', 'TMDB', '/person/popular', {}]
 };
 

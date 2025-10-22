@@ -4,6 +4,7 @@ import ConfettiCannon from 'react-native-confetti-cannon';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '../components/Button';
 import PhotoCard from '../components/PhotoCard';
+import TMDBAttribution from '../components/TMDBAttribution';
 import { useTranslation } from '../i18n/context';
 import { COLORS, SIZES } from '../utils/constants';
 
@@ -59,6 +60,7 @@ const WinnerScreen = ({ navigation, route }) => {
           )}
 
           <Text style={styles.title}>{t('winner.title')}</Text>
+          <TMDBAttribution style={{ marginBottom: 16 }} variant="compact" />
 
           <Animated.View
             style={[
@@ -73,7 +75,7 @@ const WinnerScreen = ({ navigation, route }) => {
               showName={false}
             />
 
-            <View style={[styles.winnerMeta, isLandscape && styles.winnerMetaLandscape]}>
+                        <View style={[styles.winnerMeta, isLandscape && styles.winnerMetaLandscape]}>
               <Text style={[styles.winnerName, isLandscape && styles.winnerNameLandscape]} numberOfLines={2}>
                 {winner.name}
               </Text>

@@ -9,7 +9,10 @@
 
 ## 📱 Uygulama Hakkında
 
-"Seç Birini", kullanıcılara sürekli olarak iki fotoğraf arasından seçim yaptırarak gerçek tercihlerini keşfettiren, eğlenceli ve bağımlılık yapan bir mobil uygulamadır. TMDB (The Movie Database) API'sinden gerçek verileri çekerek otantik bir deneyim sunar.
+"Seç Birini", kullanıcılara sürekli olarak iki fotoğraf arasından seçim yaptırarak gerçek tercihlerini keşfettiren, eğlenceli ve bağımlılık yapan bir mobil uygulamadır.
+
+**⚠️ İçerik Kaynağı ve Atıf:**
+Bu ürün TMDB (The Movie Database) API'sini kullanmaktadır ancak TMDB tarafından onaylanmamış veya sertifikalandırılmamıştır. Tüm film ve ünlü içerikleri TMDB ve lisans sahiplerine aittir. Daha fazla bilgi: https://www.themoviedb.org/
 
 ### ✨ Özellikler
 

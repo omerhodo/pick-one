@@ -1,8 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import Constants from 'expo-constants';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GameProvider } from './src/context/GameContext';
 import { I18nProvider } from './src/i18n/context';
@@ -14,29 +12,6 @@ import { COLORS } from './src/utils/constants';
 const Stack = createStackNavigator();
 
 export default function App() {
-  useEffect(() => {
-    // Check if we're running in Expo Go
-    const isExpoGo = Constants.appOwnership === 'expo';
-
-    // Only initialize Google Mobile Ads in development builds, not in Expo Go
-    if (!isExpoGo) {
-      try {
-        const mobileAds = require('react-native-google-mobile-ads').default;
-        mobileAds()
-          .initialize()
-          .then(adapterStatuses => {
-            // Initialization complete
-            console.log('Google Mobile Ads initialized');
-          })
-          .catch(error => {
-            console.error('Google Mobile Ads initialization error:', error);
-          });
-      } catch (error) {
-        console.log('Google Mobile Ads not available:', error.message);
-      }
-    }
-  }, []);
-
   return (
     <SafeAreaProvider>
       <I18nProvider>

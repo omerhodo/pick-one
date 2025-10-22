@@ -4,7 +4,7 @@ export default {
   "expo": {
     "name": "Seç Birini",
     "slug": "pick-one",
-    "version": "1.1.0",
+    "version": "1.2.4",
     "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -15,19 +15,10 @@ export default {
         "projectId": "6d7febf5-9d01-4d25-91bf-c36b089710f1"
       },
       "tmdbApiKey": process.env.TMDB_API_KEY,
-      "admobAndroidAppId": process.env.ADMOB_APP_ID_ANDROID,
-      "admobBannerAndroid": process.env.ADMOB_BANNER_ID_ANDROID,
-      "admobBannerIos": process.env.ADMOB_BANNER_ID_IOS,
       "disableAds": process.env.DISABLE_ADS === 'true'
     },
     "plugins": [
-      [
-        "react-native-google-mobile-ads",
-        {
-          "androidAppId": process.env.ADMOB_APP_ID_ANDROID,
-          "iosAppId": process.env.ADMOB_APP_ID_IOS
-        }
-      ]
+      "./plugins/withAndroidManifestFix"
     ],
     "splash": {
       "image": "./assets/splash-icon.png",
@@ -37,10 +28,7 @@ export default {
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.omerhodo.pickone",
-      "buildNumber": "2",
-      "config": {
-        "googleMobileAdsAppId": process.env.ADMOB_APP_ID_IOS
-      }
+      "buildNumber": "8"
     },
     "android": {
       "adaptiveIcon": {
@@ -48,10 +36,7 @@ export default {
         "backgroundColor": "#1d4ed8"
       },
       "package": "com.omerhodo.pickone",
-      "versionCode": 2,
-      "config": {
-        "googleMobileAdsAppId": process.env.ADMOB_APP_ID_ANDROID
-      },
+      "versionCode": 8,
       "edgeToEdgeEnabled": true
     },
     "web": {

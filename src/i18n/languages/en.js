@@ -95,6 +95,11 @@ export default {
     wins: "Wins"
   },
 
+  attribution: {
+    poweredBy: "Powered by",
+    disclaimer: "This product uses the TMDB API but is not endorsed or certified by TMDB."
+  },
+
   gender: {
     male: "Male",
     female: "Female",

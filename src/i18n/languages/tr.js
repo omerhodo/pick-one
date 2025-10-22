@@ -95,6 +95,11 @@ export default {
     wins: "Galibiyet"
   },
 
+  attribution: {
+    poweredBy: "Destekleyen",
+    disclaimer: "Bu ürün TMDB API'sini kullanmaktadır ancak TMDB tarafından onaylanmamış veya sertifikalandırılmamıştır."
+  },
+
   gender: {
     male: "Erkek",
     female: "Kadın",

@@ -199,10 +199,8 @@ class PhotoService {
 
   async fetchPokemon(page = 1) {
     try {
-      const limit = 20;
-      const maxPokemon = 1010;
-      const maxOffset = Math.max(0, maxPokemon - limit);
-      const offset = Math.floor(Math.random() * maxOffset);
+      const limit = 100;
+      const offset = 0;
 
       const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`);
 
@@ -213,7 +211,7 @@ class PhotoService {
       const data = await response.json();
 
       const pokemonDetails = await Promise.all(
-        data.results.slice(0, 20).map(async (pokemon, index) => {
+        data.results.map(async (pokemon, index) => {
           try {
             const detailResponse = await fetch(pokemon.url);
             const detail = await detailResponse.json();
@@ -240,7 +238,7 @@ class PhotoService {
         data: {
           results: validPokemon,
           page: page,
-          total_pages: Math.ceil(maxPokemon / limit),
+          total_pages: 1,
           total_results: validPokemon.length
         }
       };

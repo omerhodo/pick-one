@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import { Animated, Dimensions, Platform, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import photoService from '../api/photoService';
-import BannerAdBottom from '../components/BannerAdBottom';
 import BlurBackground from '../components/BlurBackground';
 import Button from '../components/Button';
 import Loader from '../components/Loader';
 import PhotoCard from '../components/PhotoCard';
+import TMDBAttribution from '../components/TMDBAttribution';
 import { useGame } from '../context/GameContext';
 import { useTranslation } from '../i18n/context';
 import { ANIMATION_DURATION, COLORS, SIZES } from '../utils/constants';
@@ -225,6 +225,9 @@ const PickScreen = ({ navigation, route }) => {
                     {t('pick.counter', { current: selections.length + 1, total: maxSelections })}
                   </Text>
                 </View>
+                <View style={styles.attributionTopContainer}>
+                  <TMDBAttribution variant="compact" />
+                </View>
               </View>
 
               <View style={styles.landscapeVS}>
@@ -250,6 +253,9 @@ const PickScreen = ({ navigation, route }) => {
                 <Text style={styles.portraitCounter}>
                   {t('pick.counter', { current: selections.length + 1, total: maxSelections })}
                 </Text>
+              </View>
+              <View style={styles.attributionTopContainer}>
+                <TMDBAttribution variant="compact" />
               </View>
             </View>
 
@@ -279,7 +285,6 @@ const PickScreen = ({ navigation, route }) => {
           </View>
         )}
       </SafeAreaView>
-      <BannerAdBottom />
     </BlurBackground>
   );
 };
@@ -592,6 +597,11 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     borderRadius: 4,
     marginBottom: 2,
+  },
+  attributionTopContainer: {
+    marginTop: -25,
+    alignItems: 'center',
+    pointerEvents: 'auto',
   },
 });
 

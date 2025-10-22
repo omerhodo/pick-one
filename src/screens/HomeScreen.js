@@ -3,11 +3,11 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ApiWarning from '../components/ApiWarning';
-import BannerAdBottom from '../components/BannerAdBottom';
 import BlurBackground from '../components/BlurBackground';
 import Button from '../components/Button';
 import LanguageSelector from '../components/LanguageSelector';
 import SelectorGroup from '../components/SelectorGroup';
+import TMDBAttribution from '../components/TMDBAttribution';
 import { UI } from '../config/categoryChoices';
 import { useGame } from '../context/GameContext';
 import { useTranslation } from '../i18n/context';
@@ -112,6 +112,7 @@ const HomeScreen = ({ navigation }) => {
                 <Text style={styles.testDataText}>{t('app.demoMode')}</Text>
               </View>
             )}
+            <TMDBAttribution style={{ marginTop: 12 }} variant="compact" />
           </View>
 
           <ScrollView
@@ -155,7 +156,6 @@ const HomeScreen = ({ navigation }) => {
           usingTestData={usingTestData}
           onDismiss={dismissApiWarning}
         />
-        <BannerAdBottom />
       </SafeAreaView>
     </BlurBackground>
   );
