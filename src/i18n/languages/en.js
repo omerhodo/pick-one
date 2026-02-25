@@ -12,7 +12,7 @@ export default {
 
   home: {
     title: "Pick One",
-    subtitle: "Choose between two celebrities and discover your preferences",
+    subtitle: "Choose between two options and discover your preferences",
     categorySelection: "Category Selection",
     selectionCount: "How Many Picks?",
     startSelection: "Start Selection",
@@ -21,22 +21,24 @@ export default {
   },
 
   categories: {
-    all: "All Celebrities",
-    allDescription: "All celebrities",
-    popularFemale: "Popular Actresses",
-    popularFemaleDescription: "Most popular female actors",
-    popularMale: "Popular Actors",
-    popularMaleDescription: "Most popular male actors",
-    female: "Actresses",
-    femaleDescription: "Female actors",
-    male: "Actors",
-    maleDescription: "Male actors",
-    movies: "Movies",
-    moviesDescription: "Movies",
+    all: "All Categories",
+    allDescription: "Popular movies",
+    popularMovies: "Popular Movies",
+    popularMoviesDescription: "Most popular movies",
+    topRatedMovies: "Top Rated Movies",
+    topRatedMoviesDescription: "Highest rated movies",
+    actionMovies: "Action Movies",
+    actionMoviesDescription: "Action genre movies",
+    comedyMovies: "Comedy Movies",
+    comedyMoviesDescription: "Comedy genre movies",
+    animationMovies: "Animation Movies",
+    animationMoviesDescription: "Animation genre movies",
     pokemon: "Pokemon",
     pokemonDescription: "Pokémon characters",
-    celebrities: "Celebrities",
-    celebritiesDescription: "Famous people"
+    rickMorty: "Rick and Morty",
+    rickMortyDescription: "Rick and Morty characters",
+    anime: "Top Anime",
+    animeDescription: "Most popular anime series"
   },
 
   pick: {
@@ -100,22 +102,14 @@ export default {
     disclaimer: "This product uses the TMDB API but is not endorsed or certified by TMDB."
   },
 
-  gender: {
-    male: "Male",
-    female: "Female",
-    unknown: "Unknown"
-  },
-
-  professions: {
-    acting: "Acting",
-    directing: "Directing",
-    writing: "Writing",
-    production: "Production",
-    sound: "Sound",
-    camera: "Camera",
-    editing: "Editing",
-    art: "Art",
-    crew: "Crew",
+  details: {
+    score: "Score",
+    episodes: "Episodes",
+    species: "Species",
+    status: "Status",
+    origin: "Origin",
+    type: "Type",
+    year: "Year",
     unknown: "Unknown"
   },
 

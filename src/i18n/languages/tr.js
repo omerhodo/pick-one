@@ -12,7 +12,7 @@ export default {
 
   home: {
     title: "Seç Birini",
-    subtitle: "İki ünlü arasından birini seç ve tercihini keşfet",
+    subtitle: "İki seçenek arasından birini seç ve tercihini keşfet",
     categorySelection: "Kategori Seçimi",
     selectionCount: "Kaç Seçim?",
     startSelection: "Seçime Başla",
@@ -21,22 +21,24 @@ export default {
   },
 
   categories: {
-    all: "Tüm Ünlüler",
-    allDescription: "Tüm ünlüler",
-    popularFemale: "Popüler Aktiristler",
-    popularFemaleDescription: "En popüler kadın aktörler",
-    popularMale: "Popüler Aktörler",
-    popularMaleDescription: "En popüler erkek aktörler",
-    female: "Aktiristler",
-    femaleDescription: "Kadın aktörler",
-    male: "Aktörler",
-    maleDescription: "Erkek aktörler",
-    movies: "Filmler",
-    moviesDescription: "Filmler",
+    all: "Tüm Kategoriler",
+    allDescription: "Popüler filmler",
+    popularMovies: "Popüler Filmler",
+    popularMoviesDescription: "En popüler filmler",
+    topRatedMovies: "En Beğenilen Filmler",
+    topRatedMoviesDescription: "En yüksek puanlı filmler",
+    actionMovies: "Aksiyon Filmleri",
+    actionMoviesDescription: "Aksiyon türünde filmler",
+    comedyMovies: "Komedi Filmleri",
+    comedyMoviesDescription: "Komedi türünde filmler",
+    animationMovies: "Animasyon Filmleri",
+    animationMoviesDescription: "Animasyon türünde filmler",
     pokemon: "Pokemonlar",
     pokemonDescription: "Pokémon karakterleri",
-    celebrities: "Ünlü Kişiler",
-    celebritiesDescription: "Ünlü kişiler"
+    rickMorty: "Rick and Morty",
+    rickMortyDescription: "Rick and Morty karakterleri",
+    anime: "Top Anime",
+    animeDescription: "En popüler anime serileri"
   },
 
   pick: {
@@ -100,22 +102,14 @@ export default {
     disclaimer: "Bu ürün TMDB API'sini kullanmaktadır ancak TMDB tarafından onaylanmamış veya sertifikalandırılmamıştır."
   },
 
-  gender: {
-    male: "Erkek",
-    female: "Kadın",
-    unknown: "Bilinmeyen"
-  },
-
-  professions: {
-    acting: "Oyunculuk",
-    directing: "Yönetmenlik",
-    writing: "Yazarlık",
-    production: "Yapımcılık",
-    sound: "Ses",
-    camera: "Kamera",
-    editing: "Kurgu",
-    art: "Sanat",
-    crew: "Ekip",
+  details: {
+    score: "Puan",
+    episodes: "Bölüm",
+    species: "Tür",
+    status: "Durum",
+    origin: "Köken",
+    type: "Tip",
+    year: "Yıl",
     unknown: "Bilinmeyen"
   },
 

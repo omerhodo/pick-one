@@ -2,7 +2,7 @@ import config from './env';
 
 /**
  * Multi-API Kategori Konfigürasyonu
- * Farklı API sağlayıcılarını destekler: TMDB, Custom APIs
+ * Farklı API sağlayıcılarını destekler: TMDB, PokeAPI, Rick and Morty, Jikan
  * Compact ve esnek yapı ile tüm kategori bilgilerini yönetir
  */
 
@@ -25,9 +25,18 @@ export const API_PROVIDERS = {
     headers: {},
     auth: 'none'
   },
-  CUSTOM: {
-    name: 'Custom API',
-    baseURL: 'https://api.example.com/v1',
+  RICKMORTY: {
+    name: 'Rick and Morty API',
+    baseURL: 'https://rickandmortyapi.com/api',
+    imageBaseURL: '',
+    apiKey: null,
+    headers: {},
+    auth: 'none'
+  },
+  JIKAN: {
+    name: 'Jikan (MyAnimeList)',
+    baseURL: 'https://api.jikan.moe/v4',
+    imageBaseURL: '',
     apiKey: null,
     headers: {},
     auth: 'none'
@@ -37,24 +46,27 @@ export const API_PROVIDERS = {
 // Compact Categories Configuration
 // Format: [key, name, shortName, icon, color, type, provider, endpoint, params]
 export const CATEGORIES = {
-  POPULAR_FEMALE: ['popular_female', 'Popüler Aktiristler', 'Popüler Aktirist', '🌟👩‍🎭', '#FF1493', 'person', 'TMDB', '/person/popular', { }],
-  POPULAR_MALE: ['popular_male', 'Popüler Aktörler', 'Popüler Aktör', '🌟👨‍🎭', '#1E90FF', 'person', 'TMDB', '/person/popular', { }],
-  FEMALE: [1, 'Aktiristler', 'Aktirist', '👩‍🎭', '#FF6B9D', 'person', 'TMDB', '/discover/person', { with_gender: 1, sort_by: 'popularity.desc' }],
-  MALE: [2, 'Aktörler', 'Aktör', '👨‍🎭', '#4DABF7', 'person', 'TMDB', '/discover/person', { with_gender: 2, sort_by: 'popularity.desc' }],
-  MOVIES: ['movies', 'Filmler', 'Film', '🎬', '#FF8787', 'movie', 'TMDB', '/movie/popular', { sort_by: 'popularity.desc' }],
+  POPULAR_MOVIES: ['popular_movies', 'Popüler Filmler', 'Popüler Film', '🔥', '#FF8787', 'movie', 'TMDB', '/movie/popular', { sort_by: 'popularity.desc' }],
+  TOP_RATED_MOVIES: ['top_rated_movies', 'En Beğenilen Filmler', 'En Beğenilen', '⭐', '#FFD700', 'movie', 'TMDB', '/movie/top_rated', {}],
+  ACTION_MOVIES: ['action_movies', 'Aksiyon Filmleri', 'Aksiyon', '💥', '#FF4500', 'movie', 'TMDB', '/discover/movie', { with_genres: 28, sort_by: 'popularity.desc' }],
+  COMEDY_MOVIES: ['comedy_movies', 'Komedi Filmleri', 'Komedi', '😂', '#32CD32', 'movie', 'TMDB', '/discover/movie', { with_genres: 35, sort_by: 'popularity.desc' }],
+  ANIMATION_MOVIES: ['animation_movies', 'Animasyon Filmleri', 'Animasyon', '🎨', '#9370DB', 'movie', 'TMDB', '/discover/movie', { with_genres: 16, sort_by: 'popularity.desc' }],
   POKEMON: ['pokemon', 'Pokemonlar', 'Pokemon', '⚡', '#FFCB05', 'pokemon', 'POKEAPI', '/pokemon', { limit: 100, offset: 0 }],
-  DEFAULT: ['default', 'Tüm Ünlüler', 'Tümü', '⭐', '#FFA502', 'person', 'TMDB', '/person/popular', {}]
+  RICK_MORTY: ['rick_morty', 'Rick and Morty', 'R&M', '🛸', '#97CE4C', 'rickmorty', 'RICKMORTY', '/character', { page: 1 }],
+  ANIME: ['anime', 'Top Anime', 'Anime', '🎌', '#E91E63', 'anime', 'JIKAN', '/top/anime', { limit: 25 }],
+  DEFAULT: ['default', 'Popüler Filmler', 'Filmler', '🎬', '#FFA502', 'movie', 'TMDB', '/movie/popular', {}]
 };
 
 const getCategoryTranslationKey = (categoryKey) => {
   const keyMap = {
-    'popular_female': 'popularFemale',
-    'popular_male': 'popularMale',
-    1: 'female',
-    2: 'male',
-    'movies': 'movies',
+    'popular_movies': 'popularMovies',
+    'top_rated_movies': 'topRatedMovies',
+    'action_movies': 'actionMovies',
+    'comedy_movies': 'comedyMovies',
+    'animation_movies': 'animationMovies',
     'pokemon': 'pokemon',
-    'celebrities': 'celebrities',
+    'rick_morty': 'rickMorty',
+    'anime': 'anime',
     'default': 'all'
   };
   return keyMap[categoryKey] || 'all';
@@ -70,7 +82,7 @@ const expandCategory = (compactData) => {
 };
 
 export const HOMEPAGE_CATEGORIES = [
-  'POPULAR_FEMALE', 'POPULAR_MALE', 'FEMALE', 'MALE', 'MOVIES', 'POKEMON'
+  'POPULAR_MOVIES', 'TOP_RATED_MOVIES', 'ACTION_MOVIES', 'COMEDY_MOVIES', 'ANIMATION_MOVIES', 'POKEMON', 'RICK_MORTY', 'ANIME'
 ].map(key => expandCategory(CATEGORIES[key]));
 
 export class CategoryAPI {
@@ -116,8 +128,10 @@ export class CategoryAPI {
 
   static normalizeKey(key) {
     const keyMap = {
-      'popular_female': 'POPULAR_FEMALE', 'popular_male': 'POPULAR_MALE',
-      1: 'FEMALE', 2: 'MALE', 'movies': 'MOVIES', 'pokemon': 'POKEMON', 'default': 'DEFAULT'
+      'popular_movies': 'POPULAR_MOVIES', 'top_rated_movies': 'TOP_RATED_MOVIES',
+      'action_movies': 'ACTION_MOVIES', 'comedy_movies': 'COMEDY_MOVIES',
+      'animation_movies': 'ANIMATION_MOVIES', 'pokemon': 'POKEMON',
+      'rick_morty': 'RICK_MORTY', 'anime': 'ANIME', 'default': 'DEFAULT'
     };
     return keyMap[key] || 'DEFAULT';
   }
@@ -166,9 +180,9 @@ export const UI = {
   getHomepageOptions: (t) => [
     {
       value: null,
-      label: t ? t('categories.all') : 'Tüm Ünlüler',
-      description: t ? t('categories.allDescription') : 'Tüm ünlüler',
-      icon: '⭐'
+      label: t ? t('categories.all') : 'Tüm Kategoriler',
+      description: t ? t('categories.allDescription') : 'Popüler filmler',
+      icon: '🎬'
     },
     ...HOMEPAGE_CATEGORIES.map(category => ({
       value: category.key,

@@ -90,15 +90,27 @@ const PhotoCard = ({ photo, onPress, style, showName = true, showDetails = false
 
             {showDetails && (
               <View style={styles.detailsContainer}>
-                {photo.knownFor && (
+                {photo.voteAverage > 0 && (
                   <Text style={styles.detail}>
-                    {photo.knownFor}
+                    {'⭐ ' + photo.voteAverage.toFixed(1)}
                   </Text>
                 )}
 
-                {photo.category && (
-                  <Text style={styles.category}>
-                    {photo.category}
+                {photo.score > 0 && (
+                  <Text style={styles.detail}>
+                    {'⭐ ' + photo.score.toFixed(1)}
+                  </Text>
+                )}
+
+                {photo.species && (
+                  <Text style={styles.detail}>
+                    {photo.species}
+                  </Text>
+                )}
+
+                {photo.types && photo.types.length > 0 && (
+                  <Text style={styles.detail}>
+                    {photo.types.join(', ')}
                   </Text>
                 )}
 
