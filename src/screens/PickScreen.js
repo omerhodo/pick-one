@@ -222,7 +222,7 @@ const PickScreen = ({ navigation, route }) => {
                     <Text style={styles.testDataIndicator}>{t('app.demo')}</Text>
                   )}
                   <Text style={styles.landscapeCounter}>
-                    {t('pick.counter', { current: selections.length + 1, total: maxSelections })}
+                    {t('pick.counter', { current: Math.min(selections.length + 1, maxSelections), total: maxSelections })}
                   </Text>
                 </View>
                 <View style={styles.attributionTopContainer}>
@@ -251,7 +251,7 @@ const PickScreen = ({ navigation, route }) => {
                   <Text style={styles.testDataIndicator}>{t('app.demo')}</Text>
                 )}
                 <Text style={styles.portraitCounter}>
-                  {t('pick.counter', { current: selections.length + 1, total: maxSelections })}
+                  {t('pick.counter', { current: Math.min(selections.length + 1, maxSelections), total: maxSelections })}
                 </Text>
               </View>
               <View style={styles.attributionTopContainer}>
