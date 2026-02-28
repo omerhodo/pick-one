@@ -35,8 +35,6 @@ export default {
     animationMoviesDescription: "Animasyon türünde filmler",
     pokemon: "Pokemonlar",
     pokemonDescription: "Pokémon karakterleri",
-    rickMorty: "Rick and Morty",
-    rickMortyDescription: "Rick and Morty karakterleri",
     anime: "Top Anime",
     animeDescription: "En popüler anime serileri"
   },
@@ -61,9 +59,9 @@ export default {
   },
 
   apiWarning: {
-    title: "API Erişim Sorunu",
-    messageWithTestData: "TMDB API'ye erişim sağlanamadı. Test verileri kullanılıyor.",
-    messageWithoutData: "TMDB API'ye bağlanırken sorun yaşandı. Lütfen internet bağlantınızı kontrol edin.",
+    title: "Bağlantı Sorunu",
+    messageWithTestData: "Veri kaynağına bağlanılamadı. Yer tutucu veriler kullanılıyor.",
+    messageWithoutData: "Veri kaynağına bağlanırken sorun yaşandı. Lütfen internet bağlantınızı kontrol edin.",
     dismiss: "Anladım"
   },
 
@@ -98,8 +96,25 @@ export default {
   },
 
   attribution: {
-    poweredBy: "Destekleyen",
-    disclaimer: "Bu ürün TMDB API'sini kullanmaktadır ancak TMDB tarafından onaylanmamış veya sertifikalandırılmamıştır."
+    poweredBy: "Veri kaynağı",
+    dataFrom: "Veri: TMDB · PokeAPI · Jikan",
+    disclaimer: "Bu ürün TMDB API'sini kullanmaktadır ancak TMDB tarafından onaylanmamış veya sertifikalandırılmamıştır.",
+    ownership: "Tüm içerikler ilgili hak sahiplerine aittir."
+  },
+
+  dataSources: {
+    title: "Veri Kaynakları ve Yasal Bilgi",
+    mainDisclaimer: "Bu uygulama gösterilen hiçbir içerik üzerinde sahiplik iddiasında bulunmamaktadır. Tüm veriler kamuya açık API'lerden dinamik olarak alınmaktadır. Tüm fikri mülkiyet hakları ilgili sahiplerine aittir.",
+    tmdbDescription: "Film verileri (başlıklar, puanlar ve poster görselleri) TMDB API tarafından sağlanmaktadır.",
+    tmdbLicense: "TMDB API Kullanım Şartları kapsamında lisanslıdır. Bu ürün TMDB API'sini kullanmaktadır ancak TMDB tarafından onaylanmamış veya sertifikalandırılmamıştır.",
+    pokeapiDescription: "Pokémon verileri ve görselleri PokeAPI projesi tarafından sağlanmaktadır.",
+    pokeapiLicense: "PokeAPI ücretsiz ve açık bir RESTful API'dir. Pokémon ve ilgili tüm isimler Nintendo'nun tescilli markasıdır.",
+    jikanDescription: "Anime verileri ve kapak görselleri Jikan API (resmi olmayan MyAnimeList API) tarafından sağlanmaktadır.",
+    jikanLicense: "Jikan açık kaynaklı bir API'dir. Tüm anime içerikleri ilgili yapımcılara ve lisans sahiplerine aittir.",
+    legalTitle: "Fikri Mülkiyet Bildirimi",
+    legalText: "Bu uygulamada gösterilen tüm film posterleri, karakter görselleri, anime çizimleri ve ilgili içerikler, ilgili telif hakkı sahiplerinin mülkiyetindedir. Bu uygulama bu içeriklere kamuya açık API'ler aracılığıyla ilgili hizmet şartları kapsamında erişmektedir ve telif haklı içerikleri depolamaz, değiştirmez veya yeniden dağıtmaz. Herhangi bir içerik sahibiyle bağlantı veya onay iddiasında bulunulmamaktadır.",
+    trademarkTitle: "Ticari Markalar",
+    trademarkText: "TMDB, Pokémon, MyAnimeList ve diğer tüm ürün adları, logolar ve markalar ilgili sahiplerinin mülkiyetindedir. Bu isimlerin kullanımı onay anlamına gelmemektedir."
   },
 
   details: {

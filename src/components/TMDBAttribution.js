@@ -16,7 +16,7 @@ const TMDBAttribution = ({ style, variant = 'default' }) => {
         activeOpacity={0.7}
       >
         <Text style={styles.compactText}>
-          {t('attribution.poweredBy')} TMDB
+          {t('attribution.dataFrom')}
         </Text>
       </TouchableOpacity>
     );
@@ -38,6 +38,9 @@ const TMDBAttribution = ({ style, variant = 'default' }) => {
       </View>
       <Text style={styles.disclaimerText}>
         {t('attribution.disclaimer')}
+      </Text>
+      <Text style={styles.ownershipText}>
+        {t('attribution.ownership')}
       </Text>
     </TouchableOpacity>
   );
@@ -81,6 +84,13 @@ const styles = StyleSheet.create({
     fontSize: 10,
     textAlign: 'center',
     marginTop: 2,
+  },
+  ownershipText: {
+    color: 'rgba(255, 255, 255, 0.5)',
+    fontSize: 9,
+    textAlign: 'center',
+    marginTop: 2,
+    fontStyle: 'italic',
   },
   compactContainer: {
     backgroundColor: 'rgba(255, 255, 255, 0.08)',

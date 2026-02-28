@@ -2,7 +2,7 @@ import config from './env';
 
 /**
  * Multi-API Kategori Konfigürasyonu
- * Farklı API sağlayıcılarını destekler: TMDB, PokeAPI, Rick and Morty, Jikan
+ * Farklı API sağlayıcılarını destekler: TMDB, PokeAPI, Jikan
  * Compact ve esnek yapı ile tüm kategori bilgilerini yönetir
  */
 
@@ -25,14 +25,7 @@ export const API_PROVIDERS = {
     headers: {},
     auth: 'none'
   },
-  RICKMORTY: {
-    name: 'Rick and Morty API',
-    baseURL: 'https://rickandmortyapi.com/api',
-    imageBaseURL: '',
-    apiKey: null,
-    headers: {},
-    auth: 'none'
-  },
+
   JIKAN: {
     name: 'Jikan (MyAnimeList)',
     baseURL: 'https://api.jikan.moe/v4',
@@ -52,7 +45,7 @@ export const CATEGORIES = {
   COMEDY_MOVIES: ['comedy_movies', 'Komedi Filmleri', 'Komedi', '😂', '#32CD32', 'movie', 'TMDB', '/discover/movie', { with_genres: 35, sort_by: 'popularity.desc' }],
   ANIMATION_MOVIES: ['animation_movies', 'Animasyon Filmleri', 'Animasyon', '🎨', '#9370DB', 'movie', 'TMDB', '/discover/movie', { with_genres: 16, sort_by: 'popularity.desc' }],
   POKEMON: ['pokemon', 'Pokemonlar', 'Pokemon', '⚡', '#FFCB05', 'pokemon', 'POKEAPI', '/pokemon', { limit: 100, offset: 0 }],
-  RICK_MORTY: ['rick_morty', 'Rick and Morty', 'R&M', '🛸', '#97CE4C', 'rickmorty', 'RICKMORTY', '/character', { page: 1 }],
+
   ANIME: ['anime', 'Top Anime', 'Anime', '🎌', '#E91E63', 'anime', 'JIKAN', '/top/anime', { limit: 25 }],
   DEFAULT: ['default', 'Popüler Filmler', 'Filmler', '🎬', '#FFA502', 'movie', 'TMDB', '/movie/popular', {}]
 };
@@ -65,7 +58,7 @@ const getCategoryTranslationKey = (categoryKey) => {
     'comedy_movies': 'comedyMovies',
     'animation_movies': 'animationMovies',
     'pokemon': 'pokemon',
-    'rick_morty': 'rickMorty',
+
     'anime': 'anime',
     'default': 'all'
   };
@@ -82,7 +75,7 @@ const expandCategory = (compactData) => {
 };
 
 export const HOMEPAGE_CATEGORIES = [
-  'POPULAR_MOVIES', 'TOP_RATED_MOVIES', 'ACTION_MOVIES', 'COMEDY_MOVIES', 'ANIMATION_MOVIES', 'POKEMON', 'RICK_MORTY', 'ANIME'
+  'POPULAR_MOVIES', 'TOP_RATED_MOVIES', 'ACTION_MOVIES', 'COMEDY_MOVIES', 'ANIMATION_MOVIES', 'POKEMON', 'ANIME'
 ].map(key => expandCategory(CATEGORIES[key]));
 
 export class CategoryAPI {
@@ -131,7 +124,7 @@ export class CategoryAPI {
       'popular_movies': 'POPULAR_MOVIES', 'top_rated_movies': 'TOP_RATED_MOVIES',
       'action_movies': 'ACTION_MOVIES', 'comedy_movies': 'COMEDY_MOVIES',
       'animation_movies': 'ANIMATION_MOVIES', 'pokemon': 'POKEMON',
-      'rick_morty': 'RICK_MORTY', 'anime': 'ANIME', 'default': 'DEFAULT'
+      'anime': 'ANIME', 'default': 'DEFAULT'
     };
     return keyMap[key] || 'DEFAULT';
   }

@@ -1,127 +1,128 @@
 import { CategoryAPI } from '../config/categoryChoices';
 import config from '../config/env';
 
-// Test verileri - Sadece filmler
+// Generic placeholder data - no third-party content references
+// Used only when API is unavailable
 const TEST_MOVIES = [
   {
-    id: 11,
-    name: "The Avengers",
-    image: "https://image.tmdb.org/t/p/w500/RYMX2wcKCBAr24UyPD7xwmjaTn.jpg",
+    id: 1001,
+    name: "Film A",
+    image: null,
     category: "movies",
-    source: "TEST",
-    popularity: 95.5,
-    releaseDate: "2012-04-25",
-    overview: "Earth mightiest heroes must come together.",
-    voteAverage: 7.7,
-    voteCount: 28000
+    source: "PLACEHOLDER",
+    popularity: 95,
+    releaseDate: "",
+    overview: "",
+    voteAverage: 8.5,
+    voteCount: 1000
   },
   {
-    id: 12,
-    name: "Inception",
-    image: "https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg",
+    id: 1002,
+    name: "Film B",
+    image: null,
     category: "movies",
-    source: "TEST",
-    popularity: 89.2,
-    releaseDate: "2010-07-16",
-    overview: "A skilled thief who commits corporate espionage by infiltrating the subconscious.",
-    voteAverage: 8.4,
-    voteCount: 35000
+    source: "PLACEHOLDER",
+    popularity: 90,
+    releaseDate: "",
+    overview: "",
+    voteAverage: 8.2,
+    voteCount: 900
   },
   {
-    id: 13,
-    name: "Interstellar",
-    image: "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg",
+    id: 1003,
+    name: "Film C",
+    image: null,
     category: "movies",
-    source: "TEST",
-    popularity: 87.3,
-    releaseDate: "2014-11-05",
-    overview: "Explorers make use of a newly discovered wormhole.",
-    voteAverage: 8.6,
-    voteCount: 32000
+    source: "PLACEHOLDER",
+    popularity: 88,
+    releaseDate: "",
+    overview: "",
+    voteAverage: 8.0,
+    voteCount: 850
   },
   {
-    id: 14,
-    name: "The Dark Knight",
-    image: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
+    id: 1004,
+    name: "Film D",
+    image: null,
     category: "movies",
-    source: "TEST",
-    popularity: 92.1,
-    releaseDate: "2008-07-18",
-    overview: "Batman raises the stakes in his war on crime.",
-    voteAverage: 9.0,
-    voteCount: 31000
+    source: "PLACEHOLDER",
+    popularity: 85,
+    releaseDate: "",
+    overview: "",
+    voteAverage: 7.8,
+    voteCount: 800
   },
   {
-    id: 15,
-    name: "Pulp Fiction",
-    image: "https://image.tmdb.org/t/p/w500/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg",
+    id: 1005,
+    name: "Film E",
+    image: null,
     category: "movies",
-    source: "TEST",
-    popularity: 88.9,
-    releaseDate: "1994-10-14",
-    overview: "A burger-loving hit man and his philosophical partner converge in this comedy crime caper.",
-    voteAverage: 8.9,
-    voteCount: 27000
+    source: "PLACEHOLDER",
+    popularity: 82,
+    releaseDate: "",
+    overview: "",
+    voteAverage: 7.5,
+    voteCount: 750
   },
   {
-    id: 16,
-    name: "Avatar",
-    image: "https://image.tmdb.org/t/p/w500/6EiRUJpuoeQPghrs3YNktfnqOVh.jpg",
+    id: 1006,
+    name: "Film F",
+    image: null,
     category: "movies",
-    source: "TEST",
-    popularity: 91.4,
-    releaseDate: "2009-12-18",
-    overview: "A paraplegic Marine is dispatched to the moon Pandora on a unique mission.",
-    voteAverage: 7.6,
-    voteCount: 29000
+    source: "PLACEHOLDER",
+    popularity: 80,
+    releaseDate: "",
+    overview: "",
+    voteAverage: 7.3,
+    voteCount: 700
   },
   {
-    id: 17,
-    name: "The Matrix",
-    image: "https://image.tmdb.org/t/p/w500/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg",
+    id: 1007,
+    name: "Film G",
+    image: null,
     category: "movies",
-    source: "TEST",
-    popularity: 90.0,
-    releaseDate: "1999-03-31",
-    overview: "A computer hacker learns about the true nature of his reality.",
-    voteAverage: 8.7,
-    voteCount: 30000
+    source: "PLACEHOLDER",
+    popularity: 78,
+    releaseDate: "",
+    overview: "",
+    voteAverage: 7.1,
+    voteCount: 650
   },
   {
-    id: 18,
-    name: "Fight Club",
-    image: "https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg",
+    id: 1008,
+    name: "Film H",
+    image: null,
     category: "movies",
-    source: "TEST",
-    popularity: 88.0,
-    releaseDate: "1999-10-15",
-    overview: "An insomniac office worker forms an underground fight club.",
-    voteAverage: 8.8,
-    voteCount: 29000
+    source: "PLACEHOLDER",
+    popularity: 75,
+    releaseDate: "",
+    overview: "",
+    voteAverage: 7.0,
+    voteCount: 600
   },
   {
-    id: 19,
-    name: "Forrest Gump",
-    image: "https://image.tmdb.org/t/p/w500/arw2vcBveWOVZr6pxd9XTd1TdQa.jpg",
+    id: 1009,
+    name: "Film I",
+    image: null,
     category: "movies",
-    source: "TEST",
-    popularity: 87.5,
-    releaseDate: "1994-07-06",
-    overview: "The presidencies of Kennedy and Johnson through the eyes of an Alabama man.",
-    voteAverage: 8.8,
-    voteCount: 28000
+    source: "PLACEHOLDER",
+    popularity: 72,
+    releaseDate: "",
+    overview: "",
+    voteAverage: 6.8,
+    voteCount: 550
   },
   {
-    id: 20,
-    name: "The Shawshank Redemption",
-    image: "https://image.tmdb.org/t/p/w500/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg",
+    id: 1010,
+    name: "Film J",
+    image: null,
     category: "movies",
-    source: "TEST",
-    popularity: 86.0,
-    releaseDate: "1994-09-23",
-    overview: "Two imprisoned men bond over a number of years.",
-    voteAverage: 9.3,
-    voteCount: 27000
+    source: "PLACEHOLDER",
+    popularity: 70,
+    releaseDate: "",
+    overview: "",
+    voteAverage: 6.5,
+    voteCount: 500
   }
 ];
 
@@ -173,33 +174,6 @@ class PhotoService {
       return {
         success: true,
         data: { results: validPokemon, page: page, total_pages: 1, total_results: validPokemon.length }
-      };
-    } catch (error) {
-      return { success: false, error: error.message, data: null };
-    }
-  }
-
-  // ========== Rick and Morty API ==========
-  async fetchRickAndMorty(page = 1) {
-    try {
-      const randomPage = Math.floor(Math.random() * 42) + 1;
-      const response = await fetch(`https://rickandmortyapi.com/api/character?page=${randomPage}`);
-      if (!response.ok) throw new Error(`Rick and Morty API error: ${response.status}`);
-      const data = await response.json();
-      const characters = data.results
-        .filter(char => char.image)
-        .map(char => ({
-          id: char.id,
-          name: char.name,
-          image: char.image,
-          status: char.status,
-          species: char.species,
-          origin: char.origin?.name || 'Unknown',
-          location: char.location?.name || 'Unknown',
-        }));
-      return {
-        success: true,
-        data: { results: characters, page: randomPage, total_pages: data.info?.pages || 42, total_results: characters.length }
       };
     } catch (error) {
       return { success: false, error: error.message, data: null };
@@ -278,7 +252,6 @@ class PhotoService {
   async fetchPopularPeople(page = 1, category = null) {
     try {
       if (category === 'pokemon') return await this.fetchPokemon(page);
-      if (category === 'rick_morty') return await this.fetchRickAndMorty(page);
       if (category === 'anime') return await this.fetchAnime(page);
       // All other categories are TMDB movies
       return await this.fetchTMDBMovies(page, category);
@@ -328,21 +301,6 @@ class PhotoService {
       weight: pokemon.weight,
       types: pokemon.types,
       pokemonId: pokemon.id
-    };
-  }
-
-  transformRickAndMorty(character) {
-    return {
-      id: character.id,
-      name: character.name,
-      image: character.image,
-      category: 'rick_morty',
-      source: 'API',
-      popularity: 1000 - character.id,
-      status: character.status,
-      species: character.species,
-      origin: character.origin,
-      location: character.location,
     };
   }
 
@@ -397,8 +355,6 @@ class PhotoService {
           transformedItems = response.data.results;
         } else if (category === 'pokemon') {
           transformedItems = response.data.results.map(p => this.transformPokemon(p));
-        } else if (category === 'rick_morty') {
-          transformedItems = response.data.results.map(c => this.transformRickAndMorty(c));
         } else if (category === 'anime') {
           transformedItems = response.data.results.map(a => this.transformAnime(a));
         } else {

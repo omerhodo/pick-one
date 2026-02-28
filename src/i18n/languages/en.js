@@ -35,8 +35,6 @@ export default {
     animationMoviesDescription: "Animation genre movies",
     pokemon: "Pokemon",
     pokemonDescription: "Pokémon characters",
-    rickMorty: "Rick and Morty",
-    rickMortyDescription: "Rick and Morty characters",
     anime: "Top Anime",
     animeDescription: "Most popular anime series"
   },
@@ -61,9 +59,9 @@ export default {
   },
 
   apiWarning: {
-    title: "API Access Issue",
-    messageWithTestData: "Unable to access TMDB API. Using test data.",
-    messageWithoutData: "There was an issue connecting to TMDB API. Please check your internet connection.",
+    title: "Connection Issue",
+    messageWithTestData: "Unable to connect to data source. Using placeholder data.",
+    messageWithoutData: "There was an issue connecting to the data source. Please check your internet connection.",
     dismiss: "Got it"
   },
 
@@ -98,8 +96,25 @@ export default {
   },
 
   attribution: {
-    poweredBy: "Powered by",
-    disclaimer: "This product uses the TMDB API but is not endorsed or certified by TMDB."
+    poweredBy: "Data provided by",
+    dataFrom: "Data: TMDB · PokeAPI · Jikan",
+    disclaimer: "This product uses the TMDB API but is not endorsed or certified by TMDB.",
+    ownership: "All content belongs to their respective owners."
+  },
+
+  dataSources: {
+    title: "Data Sources & Legal",
+    mainDisclaimer: "This app does not claim ownership of any content displayed. All data is dynamically fetched from publicly available APIs. All intellectual property rights belong to their respective owners.",
+    tmdbDescription: "Movie data including titles, ratings, and poster images are provided by TMDB API.",
+    tmdbLicense: "Licensed under TMDB API Terms of Use. This product uses the TMDB API but is not endorsed or certified by TMDB.",
+    pokeapiDescription: "Pokémon data and artwork are provided by the PokeAPI project.",
+    pokeapiLicense: "PokeAPI is a free and open RESTful API. Pokémon and all respective names are trademark & © of Nintendo.",
+    jikanDescription: "Anime data and cover art are provided by the Jikan API (unofficial MyAnimeList API).",
+    jikanLicense: "Jikan is an open-source API. All anime content belongs to their respective creators and licensors.",
+    legalTitle: "Intellectual Property Notice",
+    legalText: "All movie posters, character images, anime artwork, and related content displayed in this app are the property of their respective copyright holders. This app accesses these through publicly available APIs under their respective terms of service and does not store, modify, or redistribute copyrighted content. No affiliation with or endorsement by any content owner is claimed or implied.",
+    trademarkTitle: "Trademarks",
+    trademarkText: "TMDB, Pokémon, MyAnimeList, and all other product names, logos, and brands are property of their respective owners. Use of these names does not imply endorsement."
   },
 
   details: {

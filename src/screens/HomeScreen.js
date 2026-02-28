@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import ApiWarning from '../components/ApiWarning';
 import BlurBackground from '../components/BlurBackground';
 import Button from '../components/Button';
+import DataSourcesInfo from '../components/DataSourcesInfo';
 import LanguageSelector from '../components/LanguageSelector';
 import SelectorGroup from '../components/SelectorGroup';
 import TMDBAttribution from '../components/TMDBAttribution';
@@ -113,6 +114,7 @@ const HomeScreen = ({ navigation }) => {
               </View>
             )}
             <TMDBAttribution style={{ marginTop: 12 }} variant="compact" />
+            <DataSourcesInfo style={{ marginTop: 8 }} />
           </View>
 
           <ScrollView
